@@ -1,0 +1,78 @@
+package com.cm.matrimony_service.user;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import java.time.Instant;
+import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@NoArgsConstructor
+public class User {
+
+	@Id
+	private UUID id;
+
+	@Column(name = "mobile_number", nullable = false, unique = true, length = 15)
+	private String mobileNumber;
+
+	@Column(name = "is_verified", nullable = false)
+	private boolean verified;
+
+	@Column(name = "password")
+	private String password;
+
+	@Column(name = "is_test_user", nullable = false)
+	private boolean testUser = false;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "registration_step", nullable = false, length = 20)
+	private RegistrationStep registrationStep = RegistrationStep.AUTH;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "preferred_language", nullable = false, length = 5)
+	private PreferredLanguage preferredLanguage = PreferredLanguage.EN;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "theme_preference", nullable = false, length = 10)
+	private ThemePreference themePreference = ThemePreference.LIGHT;
+
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private Instant createdAt;
+
+	@Column(name = "updated_at", nullable = false)
+	private Instant updatedAt;
+
+	public User(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	@PrePersist
+	void prePersist() {
+		if (id == null) {
+			id = UUID.randomUUID();
+		}
+		if (mobileNumber != null && mobileNumber.startsWith("+9100000000")) {
+			this.testUser = true;
+		}
+		Instant now = Instant.now();
+		createdAt = now;
+		updatedAt = now;
+	}
+
+	@PreUpdate
+	void preUpdate() {
+		updatedAt = Instant.now();
+	}
+}

@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:matrimony;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+app:
+  jwt:
+    secret: test-secret-with-at-least-thirty-two-bytes
+    expiration-seconds: 3600
+  otp:
+    expires-in-seconds: 300
+    fixed-code: "123456"
+  upload:
+    public-base-url: https://cdn.example.test
+    upload-base-url: https://upload.example.test
