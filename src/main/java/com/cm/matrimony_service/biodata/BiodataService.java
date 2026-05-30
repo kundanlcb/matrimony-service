@@ -75,6 +75,7 @@ public class BiodataService {
 		if (request.diet() != null) biodata.setDiet(request.diet());
 		if (request.complexion() != null) biodata.setComplexion(request.complexion());
 		if (request.interests() != null) biodata.setInterests(new ArrayList<>(request.interests()));
+		if (request.additionalPhotos() != null) biodata.setAdditionalPhotos(new ArrayList<>(request.additionalPhotos()));
 		
 		if (request.email() != null) {
 			biodata.getUser().setEmail(request.email());

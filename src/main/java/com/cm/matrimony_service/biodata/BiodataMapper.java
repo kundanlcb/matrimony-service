@@ -45,6 +45,7 @@ public class BiodataMapper {
 			biodata.getDiet(),
 			biodata.getComplexion(),
 			biodata.getInterests() == null ? List.of() : List.copyOf(biodata.getInterests()),
+			biodata.getAdditionalPhotos() == null ? List.of() : List.copyOf(biodata.getAdditionalPhotos()),
 			phoneNumber,
 			email,
 			mappedAddresses);

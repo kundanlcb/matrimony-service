@@ -30,6 +30,7 @@ public final class BiodataDtos {
 		String diet,
 		String complexion,
 		List<String> interests,
+		List<String> additionalPhotos,
 		String phoneNumber,
 		String email,
 		java.util.List<com.cm.matrimony_service.biodata.AddressDtos.AddressResponse> addresses) {
@@ -53,6 +54,7 @@ public final class BiodataDtos {
 		@Size(max = 30) String diet,
 		@Size(max = 30) String complexion,
 		List<String> interests,
+		List<String> additionalPhotos,
 		String email,
 		java.util.List<com.cm.matrimony_service.biodata.AddressDtos.AddressRequest> addresses) {
 	}

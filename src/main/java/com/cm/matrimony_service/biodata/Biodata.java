@@ -89,6 +89,10 @@ public class Biodata {
 	@Column(columnDefinition = "text")
 	private List<String> interests = new ArrayList<>();
 
+	@Convert(converter = StringListJsonConverter.class)
+	@Column(name = "additional_photos", columnDefinition = "text")
+	private List<String> additionalPhotos = new ArrayList<>();
+
 	@jakarta.persistence.OneToMany(mappedBy = "biodata", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addresses = new ArrayList<>();
 
