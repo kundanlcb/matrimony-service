@@ -62,6 +62,8 @@ public class BiodataService {
 		if (request.gender() != null) biodata.setGender(parseGender(request.gender()));
 		if (request.age() != null) biodata.setAge(request.age());
 		if (request.gotra() != null) biodata.setGotra(request.gotra());
+		if (request.religion() != null) biodata.setReligion(request.religion());
+		if (request.caste() != null) biodata.setCaste(request.caste());
 		if (request.profession() != null) biodata.setProfession(request.profession());
 		if (request.annualIncome() != null) biodata.setAnnualIncome(request.annualIncome());
 		if (request.location() != null) biodata.setLocation(request.location());
@@ -73,6 +75,49 @@ public class BiodataService {
 		if (request.diet() != null) biodata.setDiet(request.diet());
 		if (request.complexion() != null) biodata.setComplexion(request.complexion());
 		if (request.interests() != null) biodata.setInterests(new ArrayList<>(request.interests()));
+		
+		if (request.email() != null) {
+			biodata.getUser().setEmail(request.email());
+			userRepository.save(biodata.getUser());
+		}
+
+		if (request.addresses() != null) {
+			for (com.cm.matrimony_service.biodata.AddressDtos.AddressRequest addrReq : request.addresses()) {
+				if (addrReq.addressType() == null) continue;
+				AddressType type;
+				try {
+					type = AddressType.valueOf(addrReq.addressType().trim().toUpperCase());
+				} catch (IllegalArgumentException e) {
+					throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid address type: " + addrReq.addressType());
+				}
+
+				Address existing = biodata.getAddresses().stream()
+					.filter(a -> a.getAddressType() == type)
+					.findFirst()
+					.orElse(null);
+
+				if (existing != null) {
+					existing.setCity(addrReq.city());
+					existing.setState(addrReq.state());
+					existing.setCountry(addrReq.country());
+					existing.setPincode(addrReq.pincode());
+					existing.setStreetAddress(addrReq.streetAddress());
+					existing.setPrimary(type == AddressType.CURRENT);
+				} else {
+					Address newAddr = new Address(
+						biodata,
+						type,
+						addrReq.city(),
+						addrReq.state(),
+						addrReq.country(),
+						addrReq.pincode(),
+						addrReq.streetAddress(),
+						type == AddressType.CURRENT
+					);
+					biodata.getAddresses().add(newAddr);
+				}
+			}
+		}
 	}
 
 	private Gender parseGender(String value) {
@@ -95,6 +140,13 @@ public class BiodataService {
 		if (!StringUtils.hasText(biodata.getLocation())) missing.add("location");
 		if (!StringUtils.hasText(biodata.getEducation())) missing.add("education");
 		if (!StringUtils.hasText(biodata.getPhotoUrl())) missing.add("photoUrl");
+
+		boolean hasCurrentAddress = biodata.getAddresses().stream()
+			.anyMatch(a -> a.getAddressType() == AddressType.CURRENT);
+		if (!hasCurrentAddress) {
+			missing.add("currentAddress");
+		}
+
 		return missing;
 	}
 }

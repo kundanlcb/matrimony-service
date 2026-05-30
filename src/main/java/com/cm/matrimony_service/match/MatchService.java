@@ -8,6 +8,7 @@ import com.cm.matrimony_service.interaction.InteractionType;
 import com.cm.matrimony_service.match.MatchDtos.CriteriaRequest;
 import com.cm.matrimony_service.match.MatchDtos.CriteriaResponse;
 import com.cm.matrimony_service.match.MatchDtos.MatchProfileResponse;
+import com.cm.matrimony_service.user.BlockRepository;
 import com.cm.matrimony_service.user.User;
 import com.cm.matrimony_service.user.UserRepository;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class MatchService {
 	private final BiodataRepository biodataRepository;
 	private final UserRepository userRepository;
 	private final InteractionRepository interactionRepository;
+	private final BlockRepository blockRepository;
 
 	@Transactional(readOnly = true)
 	public Page<MatchProfileResponse> findMatches(UUID userId, int page, int size, String sortBy) {
@@ -48,9 +50,13 @@ public class MatchService {
 		Set<UUID> excluded = Set.copyOf(interactionRepository.findInteractedUserIds(userId,
 			List.of(InteractionType.PASSED, InteractionType.INTEREST_SENT, InteractionType.MATCH_ACCEPTED)));
 
+		List<UUID> blockedUserIds = blockRepository.findBlockedUserIds(userId);
+
 		List<MatchProfileResponse> matches = biodataRepository.findAll().stream()
 			.filter(candidate -> !candidate.getUser().getId().equals(userId))
 			.filter(candidate -> candidate.getUser().isTestUser() == isSearcherTestUser)
+			.filter(candidate -> candidate.getUser().isActive() && !candidate.getUser().isHidden())
+			.filter(candidate -> !blockedUserIds.contains(candidate.getUser().getId()))
 			.filter(candidate -> !excluded.contains(candidate.getUser().getId()))
 			.filter(candidate -> matchesCriteria(candidate, criteria))
 			.map(candidate -> toProfile(candidate, criteria))

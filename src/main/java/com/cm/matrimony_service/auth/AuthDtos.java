@@ -10,14 +10,14 @@ public final class AuthDtos {
 	}
 
 	public record RequestOtpRequest(
-		@NotBlank @Pattern(regexp = "^\\+[1-9]\\d{7,14}$") String mobileNumber) {
+		@NotBlank @Pattern(regexp = "^(?:\\+[1-9]\\d{7,14}|[1-9]\\d{9})$") String mobileNumber) {
 	}
 
 	public record RequestOtpResponse(String status, String message, int expiresInSeconds) {
 	}
 
 	public record VerifyOtpRequest(
-		@NotBlank @Pattern(regexp = "^\\+[1-9]\\d{7,14}$") String mobileNumber,
+		@NotBlank @Pattern(regexp = "^(?:\\+[1-9]\\d{7,14}|[1-9]\\d{9})$") String mobileNumber,
 		@NotBlank @Pattern(regexp = "^\\d{6}$") String otp) {
 	}
 
@@ -32,7 +32,7 @@ public final class AuthDtos {
 	}
 
 	public record LoginRequest(
-		@NotBlank @Pattern(regexp = "^\\+[1-9]\\d{7,14}$") String mobileNumber,
+		@NotBlank @Pattern(regexp = "^(?:\\+[1-9]\\d{7,14}|[1-9]\\d{9})$") String mobileNumber,
 		@NotBlank String password) {
 	}
 }

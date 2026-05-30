@@ -5,6 +5,7 @@ import com.cm.matrimony_service.biodata.BiodataRepository;
 import com.cm.matrimony_service.biodata.BiodataDtos.BiodataResponse;
 import com.cm.matrimony_service.common.exception.ApiException;
 import com.cm.matrimony_service.interaction.InteractionDtos.SendInteractionResponse;
+import com.cm.matrimony_service.user.BlockRepository;
 import com.cm.matrimony_service.user.User;
 import com.cm.matrimony_service.user.UserRepository;
 import java.util.List;
@@ -22,6 +23,7 @@ public class InteractionService {
 	private final UserRepository userRepository;
 	private final BiodataRepository biodataRepository;
 	private final BiodataMapper biodataMapper;
+	private final BlockRepository blockRepository;
 
 	@Transactional
 	public SendInteractionResponse send(UUID fromUserId, UUID toUserId, String typeValue) {
@@ -33,6 +35,16 @@ public class InteractionService {
 			.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "User not found"));
 		User toUser = userRepository.findById(toUserId)
 			.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Target user not found"));
+
+		if (blockRepository.existsBlockBetween(fromUserId, toUserId)) {
+			throw new ApiException(HttpStatus.FORBIDDEN, "Action blocked due to account restrictions");
+		}
+
+		if (type == InteractionType.INTEREST_SENT) {
+			if (!toUser.isActive() || toUser.isHidden()) {
+				throw new ApiException(HttpStatus.BAD_REQUEST, "Profile is currently unavailable");
+			}
+		}
 
 		boolean mutual = false;
 		if (type == InteractionType.INTEREST_SENT) {

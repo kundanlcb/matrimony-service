@@ -17,6 +17,8 @@ public final class BiodataDtos {
 		String gender,
 		Integer age,
 		String gotra,
+		String religion,
+		String caste,
 		String profession,
 		Long annualIncome,
 		String location,
@@ -27,7 +29,10 @@ public final class BiodataDtos {
 		String maritalStatus,
 		String diet,
 		String complexion,
-		List<String> interests) {
+		List<String> interests,
+		String phoneNumber,
+		String email,
+		java.util.List<com.cm.matrimony_service.biodata.AddressDtos.AddressResponse> addresses) {
 	}
 
 	public record UpdateBiodataRequest(
@@ -35,6 +40,8 @@ public final class BiodataDtos {
 		String gender,
 		@Min(18) @Max(70) Integer age,
 		@Size(max = 50) String gotra,
+		@Size(max = 50) String religion,
+		@Size(max = 100) String caste,
 		@Size(max = 100) String profession,
 		Long annualIncome,
 		@Size(max = 100) String location,
@@ -45,7 +52,9 @@ public final class BiodataDtos {
 		@Size(max = 30) String maritalStatus,
 		@Size(max = 30) String diet,
 		@Size(max = 30) String complexion,
-		List<String> interests) {
+		List<String> interests,
+		String email,
+		java.util.List<com.cm.matrimony_service.biodata.AddressDtos.AddressRequest> addresses) {
 	}
 
 	public record CompleteRegistrationResponse(String status, String message, String registrationStep) {

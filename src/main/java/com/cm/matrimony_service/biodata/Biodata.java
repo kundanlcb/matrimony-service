@@ -50,6 +50,12 @@ public class Biodata {
 	@Column(length = 50)
 	private String gotra;
 
+	@Column(length = 50)
+	private String religion;
+
+	@Column(length = 100)
+	private String caste;
+
 	@Column(length = 100)
 	private String profession;
 
@@ -82,6 +88,9 @@ public class Biodata {
 	@Convert(converter = StringListJsonConverter.class)
 	@Column(columnDefinition = "text")
 	private List<String> interests = new ArrayList<>();
+
+	@jakarta.persistence.OneToMany(mappedBy = "biodata", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+	private List<Address> addresses = new ArrayList<>();
 
 	public Biodata(User user) {
 		this.user = user;

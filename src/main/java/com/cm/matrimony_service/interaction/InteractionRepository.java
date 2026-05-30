@@ -19,4 +19,8 @@ public interface InteractionRepository extends JpaRepository<Interaction, UUID> 
 	@org.springframework.data.jpa.repository.Modifying
 	@Query("delete from Interaction i where i.fromUser.id = :userId or i.toUser.id = :userId")
 	void deleteAllByUserId(@Param("userId") UUID userId);
+
+	@org.springframework.data.jpa.repository.Modifying
+	@Query("delete from Interaction i where (i.fromUser.id = :user1 and i.toUser.id = :user2) or (i.fromUser.id = :user2 and i.toUser.id = :user1)")
+	void deleteInteractionsBetween(@Param("user1") UUID user1, @Param("user2") UUID user2);
 }

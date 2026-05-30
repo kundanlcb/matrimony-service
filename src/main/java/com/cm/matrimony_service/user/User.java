@@ -36,6 +36,15 @@ public class User {
 	@Column(name = "is_test_user", nullable = false)
 	private boolean testUser = false;
 
+	@Column(name = "is_active", nullable = false)
+	private boolean active = true;
+
+	@Column(name = "is_hidden", nullable = false)
+	private boolean hidden = false;
+
+	@Column(name = "email", length = 100)
+	private String email;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "registration_step", nullable = false, length = 20)
 	private RegistrationStep registrationStep = RegistrationStep.AUTH;
