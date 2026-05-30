@@ -50,7 +50,13 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+		configuration.setAllowedOrigins(Arrays.asList(
+			"https://admin.maithilmatch.com", 
+			"https://maithilmatch.com",
+			"https://main.d2mo1ybmexszz0.amplifyapp.com",
+			"http://localhost:3000", 
+			"http://localhost:5173"
+		));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("*"));
 		configuration.setAllowCredentials(true);
