@@ -28,19 +28,19 @@ public class BiodataService {
 
 	@Transactional(readOnly = true)
 	public BiodataResponse getMine(UUID userId) {
-		return mapper.toResponse(getByUserId(userId));
+		return mapper.toResponse(getOrCreateByUserId(userId));
 	}
 
 	@Transactional
 	public BiodataResponse updateMine(UUID userId, UpdateBiodataRequest request) {
-		Biodata biodata = getByUserId(userId);
+		Biodata biodata = getOrCreateByUserId(userId);
 		applyPatch(biodata, request);
 		return mapper.toResponse(biodataRepository.save(biodata));
 	}
 
 	@Transactional
 	public ResponseEntity<?> complete(UUID userId) {
-		Biodata biodata = getByUserId(userId);
+		Biodata biodata = getOrCreateByUserId(userId);
 		List<String> missing = missingRequiredFields(biodata);
 		if (!missing.isEmpty()) {
 			return ResponseEntity.badRequest().body(new MissingFieldsResponse("error", missing));
@@ -52,9 +52,13 @@ public class BiodataService {
 		return ResponseEntity.ok(new CompleteRegistrationResponse("success", "Registration completed", "completed"));
 	}
 
-	private Biodata getByUserId(UUID userId) {
+	private Biodata getOrCreateByUserId(UUID userId) {
 		return biodataRepository.findByUserId(userId)
-			.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Biodata not found"));
+			.orElseGet(() -> {
+				User user = userRepository.findById(userId)
+					.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "User not found"));
+				return biodataRepository.save(new Biodata(user));
+			});
 	}
 
 	private void applyPatch(Biodata biodata, UpdateBiodataRequest request) {
