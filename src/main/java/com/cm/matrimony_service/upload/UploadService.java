@@ -34,8 +34,7 @@ public class UploadService {
 		}
 		String safeFileName = sanitize(fileName);
 		String key = "users/%s/%s".formatted(userId, safeFileName);
-		String encodedKey = encodePath(key);
-		String fileUrl = "%s/%s".formatted(trimSlash(properties.upload().publicBaseUrl()), encodedKey);
+		String fileUrl = "%s/%s".formatted(trimSlash(properties.upload().publicBaseUrl()), key);
 		
 		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
 				.bucket(properties.upload().bucketName())
@@ -63,9 +62,7 @@ public class UploadService {
 		return cleaned;
 	}
 
-	private String encodePath(String path) {
-		return path.replace("/", "%2F");
-	}
+
 
 	private String trimSlash(String value) {
 		return value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
