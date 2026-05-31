@@ -13,6 +13,8 @@ public interface InteractionRepository extends JpaRepository<Interaction, UUID> 
 
 	List<Interaction> findByToUserIdAndType(UUID toUserId, InteractionType type);
 
+	List<Interaction> findByFromUserIdAndType(UUID fromUserId, InteractionType type);
+
 	@Query("select i.toUser.id from Interaction i where i.fromUser.id = :userId and i.type in :types")
 	List<UUID> findInteractedUserIds(@Param("userId") UUID userId, @Param("types") Collection<InteractionType> types);
 

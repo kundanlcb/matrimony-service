@@ -31,4 +31,14 @@ public class InteractionController {
 	List<BiodataResponse> received(@AuthenticationPrincipal AuthenticatedUser user) {
 		return interactionService.received(user.id());
 	}
+
+	@GetMapping("/sent")
+	List<BiodataResponse> sent(@AuthenticationPrincipal AuthenticatedUser user) {
+		return interactionService.sent(user.id());
+	}
+
+	@GetMapping("/matches")
+	List<BiodataResponse> matches(@AuthenticationPrincipal AuthenticatedUser user) {
+		return interactionService.matches(user.id());
+	}
 }

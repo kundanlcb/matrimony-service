@@ -54,6 +54,14 @@ public class InteractionService {
 				return new SendInteractionResponse("success", true);
 			}
 		}
+		if (type == InteractionType.MATCH_DECLINED) {
+			interactionRepository.findByFromUserIdAndToUserIdAndType(toUserId, fromUserId, InteractionType.INTEREST_SENT)
+				.ifPresent(incoming -> {
+					incoming.setType(InteractionType.MATCH_DECLINED);
+					interactionRepository.save(incoming);
+				});
+		}
+
 		upsert(fromUser, toUser, type);
 		return new SendInteractionResponse("success", mutual);
 	}
@@ -64,6 +72,26 @@ public class InteractionService {
 			.map(Interaction::getFromUser)
 			.map(user -> biodataRepository.findByUserId(user.getId())
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Sender biodata not found")))
+			.map(biodataMapper::toResponse)
+			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public List<BiodataResponse> sent(UUID userId) {
+		return interactionRepository.findByFromUserIdAndType(userId, InteractionType.INTEREST_SENT).stream()
+			.map(Interaction::getToUser)
+			.map(user -> biodataRepository.findByUserId(user.getId())
+				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Recipient biodata not found")))
+			.map(biodataMapper::toResponse)
+			.toList();
+	}
+
+	@Transactional(readOnly = true)
+	public List<BiodataResponse> matches(UUID userId) {
+		return interactionRepository.findByFromUserIdAndType(userId, InteractionType.MATCH_ACCEPTED).stream()
+			.map(Interaction::getToUser)
+			.map(user -> biodataRepository.findByUserId(user.getId())
+				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Match biodata not found")))
 			.map(biodataMapper::toResponse)
 			.toList();
 	}

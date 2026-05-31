@@ -191,6 +191,83 @@ class MatrimonyApiIntegrationTests {
 	}
 
 	@Test
+	void decliningInterestRemovesFromReceivedQueueAndExposesSentAndMatches() throws Exception {
+		User first = createUserWithProfile("+919888888888", "Sender", Gender.MALE, 28, "Kashyap", "Patna", "Engineer", 1000000L);
+		User second = createUserWithProfile("+919999999999", "Recipient", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1100000L);
+		String firstToken = loginExisting(first.getMobileNumber());
+		String secondToken = loginExisting(second.getMobileNumber());
+
+		// 1. First sends interest to second
+		mockMvc.perform(post("/api/v1/interactions")
+				.header("Authorization", bearer(firstToken))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json(Map.of("toUserId", second.getId(), "type", "interest_sent"))))
+			.andExpect(status().isOk());
+
+		// Verify first has it in sent
+		mockMvc.perform(get("/api/v1/interactions/sent")
+				.header("Authorization", bearer(firstToken)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(1)))
+			.andExpect(jsonPath("$[0].fullName").value("Recipient"));
+
+		// Verify second has it in received
+		mockMvc.perform(get("/api/v1/interactions/received")
+				.header("Authorization", bearer(secondToken)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(1)))
+			.andExpect(jsonPath("$[0].fullName").value("Sender"));
+
+		// 2. Second declines the interest from first
+		mockMvc.perform(post("/api/v1/interactions")
+				.header("Authorization", bearer(secondToken))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json(Map.of("toUserId", first.getId(), "type", "match_declined"))))
+			.andExpect(status().isOk());
+
+		// Verify second no longer has it in received
+		mockMvc.perform(get("/api/v1/interactions/received")
+				.header("Authorization", bearer(secondToken)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(0)));
+
+		// Verify first no longer has it in sent since it is declined
+		mockMvc.perform(get("/api/v1/interactions/sent")
+				.header("Authorization", bearer(firstToken)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(0)));
+
+		// 3. Make them mutual match to test matches endpoint
+		interactionRepository.deleteAll();
+
+		mockMvc.perform(post("/api/v1/interactions")
+				.header("Authorization", bearer(firstToken))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json(Map.of("toUserId", second.getId(), "type", "interest_sent"))))
+			.andExpect(status().isOk());
+
+		mockMvc.perform(post("/api/v1/interactions")
+				.header("Authorization", bearer(secondToken))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json(Map.of("toUserId", first.getId(), "type", "interest_sent"))))
+			.andExpect(status().isOk());
+
+		// Verify mutual match in matches endpoint for first
+		mockMvc.perform(get("/api/v1/interactions/matches")
+				.header("Authorization", bearer(firstToken)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(1)))
+			.andExpect(jsonPath("$[0].fullName").value("Recipient"));
+
+		// Verify mutual match in matches endpoint for second
+		mockMvc.perform(get("/api/v1/interactions/matches")
+				.header("Authorization", bearer(secondToken)))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(1)))
+			.andExpect(jsonPath("$[0].fullName").value("Sender"));
+	}
+
+	@Test
 	void uploadEndpointReturnsUserScopedUrl() throws Exception {
 		String token = login("+918888888888");
 
