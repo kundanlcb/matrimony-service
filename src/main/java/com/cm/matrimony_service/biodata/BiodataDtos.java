@@ -62,6 +62,22 @@ public final class BiodataDtos {
 	public record CompleteRegistrationResponse(String status, String message, String registrationStep) {
 	}
 
+	public record PublicBiodataResponse(
+		UUID id,
+		String fullName,
+		String gender,
+		Integer age,
+		String height,
+		String location,
+		String gotra,
+		String religion,
+		String caste,
+		String photoUrl,
+		String profession,
+		String education,
+		String aboutMe) {
+	}
+
 	public record MissingFieldsResponse(String status, List<String> missingFields) {
 	}
 }
