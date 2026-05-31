@@ -36,10 +36,10 @@ public class User {
 	@Column(name = "is_test_user", nullable = false)
 	private boolean testUser = false;
 
-	@Column(name = "is_active", nullable = false)
+	@Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
 	private boolean active = true;
 
-	@Column(name = "is_hidden", nullable = false)
+	@Column(name = "is_hidden", nullable = false, columnDefinition = "boolean default false")
 	private boolean hidden = false;
 
 	@Column(name = "email", length = 100)
