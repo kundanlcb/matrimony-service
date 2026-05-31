@@ -31,6 +31,27 @@ public class BiodataService {
 		return mapper.toResponse(getOrCreateByUserId(userId));
 	}
 
+	@Transactional(readOnly = true)
+	public com.cm.matrimony_service.biodata.BiodataDtos.PublicBiodataResponse getPublicBiodata(UUID userId) {
+		Biodata biodata = biodataRepository.findByUserId(userId)
+			.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Profile not found"));
+		return new com.cm.matrimony_service.biodata.BiodataDtos.PublicBiodataResponse(
+			biodata.getId(),
+			biodata.getFullName(),
+			biodata.getGender() != null ? biodata.getGender().name() : null,
+			biodata.getAge(),
+			biodata.getHeight(),
+			biodata.getLocation(),
+			biodata.getGotra(),
+			biodata.getReligion(),
+			biodata.getCaste(),
+			biodata.getPhotoUrl(),
+			biodata.getProfession(),
+			biodata.getEducation(),
+			biodata.getAboutMe()
+		);
+	}
+
 	@Transactional
 	public BiodataResponse updateMine(UUID userId, UpdateBiodataRequest request) {
 		Biodata biodata = getOrCreateByUserId(userId);
@@ -102,19 +123,19 @@ public class BiodataService {
 					.orElse(null);
 
 				if (existing != null) {
-					existing.setCity(addrReq.city());
-					existing.setState(addrReq.state());
-					existing.setCountry(addrReq.country());
-					existing.setPincode(addrReq.pincode());
-					existing.setStreetAddress(addrReq.streetAddress());
+					if (addrReq.city() != null) existing.setCity(addrReq.city());
+					if (addrReq.state() != null) existing.setState(addrReq.state());
+					if (addrReq.country() != null) existing.setCountry(addrReq.country());
+					if (addrReq.pincode() != null) existing.setPincode(addrReq.pincode());
+					if (addrReq.streetAddress() != null) existing.setStreetAddress(addrReq.streetAddress());
 					existing.setPrimary(type == AddressType.CURRENT);
 				} else {
 					Address newAddr = new Address(
 						biodata,
 						type,
-						addrReq.city(),
-						addrReq.state(),
-						addrReq.country(),
+						addrReq.city() != null ? addrReq.city() : "N/A",
+						addrReq.state() != null ? addrReq.state() : "N/A",
+						addrReq.country() != null ? addrReq.country() : "India",
 						addrReq.pincode(),
 						addrReq.streetAddress(),
 						type == AddressType.CURRENT
