@@ -28,6 +28,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import com.cm.matrimony_service.auth.EmailService;
 
 @SpringBootTest
@@ -73,14 +76,25 @@ class MatrimonyApiIntegrationTests {
 			.andExpect(jsonPath("$.status").value("success"))
 			.andExpect(jsonPath("$.expiresInSeconds").value(300));
 
-		mockMvc.perform(post("/api/v1/auth/verify-otp")
+		MvcResult verifyResult = mockMvc.perform(post("/api/v1/auth/verify-otp")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json(Map.of("email", "test99@example.com", "otp", "123456"))))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("success"))
 			.andExpect(jsonPath("$.token").isNotEmpty())
-			.andExpect(jsonPath("$.user.registrationStep").value("biodata"))
-			.andExpect(jsonPath("$.user.preferredLanguage").value("en"));
+			.andExpect(jsonPath("$.user.registrationStep").value("password"))
+			.andExpect(jsonPath("$.user.preferredLanguage").value("en"))
+			.andReturn();
+
+		String token = objectMapper.readTree(verifyResult.getResponse().getContentAsString()).get("token").asText();
+
+		mockMvc.perform(post("/api/v1/auth/setup-password")
+				.header("Authorization", bearer(token))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json(Map.of("password", "Secret123!"))))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("success"))
+			.andExpect(jsonPath("$.user.registrationStep").value("biodata"));
 
 		User user = userRepository.findByEmail("test99@example.com").orElseThrow();
 		org.assertj.core.api.Assertions.assertThat(biodataRepository.findByUserId(user.getId())).isPresent();
@@ -115,11 +129,15 @@ class MatrimonyApiIntegrationTests {
 					"location", "Darbhanga",
 					"education", "B.Tech",
 					"photoUrl", "https://cdn.example.test/profile.jpg",
-					"interests", List.of("Reading", "Travel")))))
+					"addresses", List.of(Map.of(
+						"addressType", "current",
+						"city", "Patna",
+						"state", "Bihar",
+						"country", "India"
+					))))))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.fullName").value("Rahul Jha"))
-			.andExpect(jsonPath("$.gender").value("Male"))
-			.andExpect(jsonPath("$.interests", hasSize(2)));
+			.andExpect(jsonPath("$.gender").value("Male"));
 
 		mockMvc.perform(post("/api/v1/biodata/me/complete").header("Authorization", bearer(token)))
 			.andExpect(status().isOk())
@@ -278,7 +296,7 @@ class MatrimonyApiIntegrationTests {
 				.param("fileName", "../profile photo.jpg")
 				.param("contentType", "image/jpeg"))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.uploadUrl").value(org.hamcrest.Matchers.containsString("contentType=image%2Fjpeg")))
+			.andExpect(jsonPath("$.uploadUrl").value(org.hamcrest.Matchers.containsString("X-Amz-Signature")))
 			.andExpect(jsonPath("$.fileUrl").value(org.hamcrest.Matchers.containsString("profile_photo.jpg")));
 	}
 
@@ -318,7 +336,20 @@ class MatrimonyApiIntegrationTests {
 			.andExpect(status().isOk())
 			.andReturn();
 		JsonNode node = objectMapper.readTree(result.getResponse().getContentAsString());
-		return node.get("token").asText();
+		String token = node.get("token").asText();
+		String step = node.get("user").get("registrationStep").asText();
+		
+		if ("password".equals(step)) {
+			MvcResult pwdResult = mockMvc.perform(post("/api/v1/auth/setup-password")
+					.header("Authorization", bearer(token))
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(json(Map.of("password", "Secret123!"))))
+				.andExpect(status().isOk())
+				.andReturn();
+			return objectMapper.readTree(pwdResult.getResponse().getContentAsString()).get("token").asText();
+		}
+		
+		return token;
 	}
 
 	private String bearer(String token) {
