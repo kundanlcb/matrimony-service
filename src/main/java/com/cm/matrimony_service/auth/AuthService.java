@@ -24,29 +24,31 @@ import java.util.UUID;
 public class AuthService {
 
 	private final OtpService otpService;
+	private final EmailService emailService;
 	private final JwtService jwtService;
 	private final UserRepository userRepository;
 	private final BiodataRepository biodataRepository;
 	private final MatchCriteriaRepository criteriaRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public RequestOtpResponse requestOtp(String mobileNumber) {
-		int expiresInSeconds = otpService.request(mobileNumber);
-		return new RequestOtpResponse("success", "OTP sent successfully", expiresInSeconds);
+	public RequestOtpResponse requestOtp(String email) {
+		int expiresInSeconds = otpService.request(email);
+		emailService.sendOtpEmail(email, otpService.getLatestCode(email));
+		return new RequestOtpResponse("success", "OTP sent successfully to email", expiresInSeconds);
 	}
 
 	@Transactional
-	public VerifyOtpResponse verifyOtp(String mobileNumber, String otp) {
-		otpService.verify(mobileNumber, otp);
-		User user = userRepository.findByMobileNumber(mobileNumber).orElseGet(() -> new User(mobileNumber));
+	public VerifyOtpResponse verifyOtp(String email, String otp) {
+		otpService.verify(email, otp);
+		User user = userRepository.findByEmail(email).orElseGet(() -> new User(email));
 		user.setVerified(true);
 		if (user.getRegistrationStep() == RegistrationStep.AUTH) {
 			user.setRegistrationStep(RegistrationStep.PASSWORD);
 		}
 		User savedUser = userRepository.save(user);
 
-		String token = jwtService.issueToken(savedUser.getId(), savedUser.getMobileNumber(), "USER");
-		AuthUserResponse responseUser = new AuthUserResponse(savedUser.getId(), savedUser.getMobileNumber(),
+		String token = jwtService.issueToken(savedUser.getId(), email, "USER");
+		AuthUserResponse responseUser = new AuthUserResponse(savedUser.getId(), savedUser.getEmail(),
 			savedUser.getRegistrationStep().name().toLowerCase(), savedUser.getPreferredLanguage().name().toLowerCase());
 		return new VerifyOtpResponse("success", token, responseUser);
 	}
@@ -66,22 +68,22 @@ public class AuthService {
 		biodataRepository.findByUserId(savedUser.getId()).orElseGet(() -> biodataRepository.save(new Biodata(savedUser)));
 		criteriaRepository.findByUserId(savedUser.getId()).orElseGet(() -> criteriaRepository.save(new MatchCriteria(savedUser)));
 
-		String token = jwtService.issueToken(savedUser.getId(), savedUser.getMobileNumber(), "USER");
-		AuthUserResponse responseUser = new AuthUserResponse(savedUser.getId(), savedUser.getMobileNumber(),
+		String token = jwtService.issueToken(savedUser.getId(), savedUser.getEmail(), "USER");
+		AuthUserResponse responseUser = new AuthUserResponse(savedUser.getId(), savedUser.getEmail(),
 			savedUser.getRegistrationStep().name().toLowerCase(), savedUser.getPreferredLanguage().name().toLowerCase());
 		return new VerifyOtpResponse("success", token, responseUser);
 	}
 
-	public VerifyOtpResponse login(String mobileNumber, String password) {
-		User user = userRepository.findByMobileNumber(mobileNumber)
-			.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Invalid mobile number or password"));
+	public VerifyOtpResponse login(String email, String password) {
+		User user = userRepository.findByEmail(email)
+			.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
 			
 		if (user.getPassword() == null || !passwordEncoder.matches(password, user.getPassword())) {
-			throw new ApiException(HttpStatus.UNAUTHORIZED, "Invalid mobile number or password");
+			throw new ApiException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
 		}
 		
-		String token = jwtService.issueToken(user.getId(), user.getMobileNumber(), "USER");
-		AuthUserResponse responseUser = new AuthUserResponse(user.getId(), user.getMobileNumber(),
+		String token = jwtService.issueToken(user.getId(), user.getEmail(), "USER");
+		AuthUserResponse responseUser = new AuthUserResponse(user.getId(), user.getEmail(),
 			user.getRegistrationStep().name().toLowerCase(), user.getPreferredLanguage().name().toLowerCase());
 		return new VerifyOtpResponse("success", token, responseUser);
 	}

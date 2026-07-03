@@ -25,6 +25,7 @@ public class BiodataService {
 	private final BiodataRepository biodataRepository;
 	private final UserRepository userRepository;
 	private final BiodataMapper mapper;
+	private final com.cm.matrimony_service.auth.EmailService emailService;
 
 	@Transactional(readOnly = true)
 	public BiodataResponse getMine(UUID userId) {
@@ -70,6 +71,11 @@ public class BiodataService {
 			.orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "User not found"));
 		user.setRegistrationStep(RegistrationStep.COMPLETED);
 		userRepository.save(user);
+		
+		if (user.getEmail() != null) {
+			emailService.sendRegistrationCompleteEmail(user.getEmail(), biodata);
+		}
+		
 		return ResponseEntity.ok(new CompleteRegistrationResponse("success", "Registration completed", "completed"));
 	}
 

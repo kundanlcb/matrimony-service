@@ -10,18 +10,18 @@ public final class AuthDtos {
 	}
 
 	public record RequestOtpRequest(
-		@NotBlank @Pattern(regexp = "^(?:\\+[1-9]\\d{7,14}|[1-9]\\d{9})$") String mobileNumber) {
+		@NotBlank @jakarta.validation.constraints.Email String email) {
 	}
 
 	public record RequestOtpResponse(String status, String message, int expiresInSeconds) {
 	}
 
 	public record VerifyOtpRequest(
-		@NotBlank @Pattern(regexp = "^(?:\\+[1-9]\\d{7,14}|[1-9]\\d{9})$") String mobileNumber,
+		@NotBlank @jakarta.validation.constraints.Email String email,
 		@NotBlank @Pattern(regexp = "^\\d{6}$") String otp) {
 	}
 
-	public record AuthUserResponse(UUID id, String mobileNumber, String registrationStep, String preferredLanguage) {
+	public record AuthUserResponse(UUID id, String email, String registrationStep, String preferredLanguage) {
 	}
 
 	public record VerifyOtpResponse(String status, String token, AuthUserResponse user) {
@@ -32,7 +32,7 @@ public final class AuthDtos {
 	}
 
 	public record LoginRequest(
-		@NotBlank @Pattern(regexp = "^(?:\\+[1-9]\\d{7,14}|[1-9]\\d{9})$") String mobileNumber,
+		@NotBlank @jakarta.validation.constraints.Email String email,
 		@NotBlank String password) {
 	}
 }

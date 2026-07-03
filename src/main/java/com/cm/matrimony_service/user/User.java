@@ -24,8 +24,7 @@ public class User {
 	@Id
 	private UUID id;
 
-	@Column(name = "mobile_number", nullable = false, unique = true, length = 15)
-	private String mobileNumber;
+
 
 	@Column(name = "is_verified", nullable = false)
 	private boolean verified;
@@ -42,7 +41,7 @@ public class User {
 	@Column(name = "is_hidden", nullable = false, columnDefinition = "boolean default false")
 	private boolean hidden = false;
 
-	@Column(name = "email", length = 100)
+	@Column(name = "email", nullable = false, unique = true, length = 100)
 	private String email;
 
 	@Enumerated(EnumType.STRING)
@@ -63,8 +62,8 @@ public class User {
 	@Column(name = "updated_at", nullable = false)
 	private Instant updatedAt;
 
-	public User(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
+	public User(String email) {
+		this.email = email;
 	}
 
 	@PrePersist
@@ -72,7 +71,7 @@ public class User {
 		if (id == null) {
 			id = UUID.randomUUID();
 		}
-		if (mobileNumber != null && mobileNumber.startsWith("+9100000000")) {
+		if (email != null && email.startsWith("test")) {
 			this.testUser = true;
 		}
 		Instant now = Instant.now();

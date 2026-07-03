@@ -24,12 +24,12 @@ public class AuthController {
 
 	@PostMapping("/request-otp")
 	RequestOtpResponse requestOtp(@Valid @RequestBody RequestOtpRequest request) {
-		return authService.requestOtp(request.mobileNumber());
+		return authService.requestOtp(request.email());
 	}
 
 	@PostMapping("/verify-otp")
 	VerifyOtpResponse verifyOtp(@Valid @RequestBody VerifyOtpRequest request) {
-		return authService.verifyOtp(request.mobileNumber(), request.otp());
+		return authService.verifyOtp(request.email(), request.otp());
 	}
 
 	@PostMapping("/setup-password")
@@ -39,6 +39,6 @@ public class AuthController {
 
 	@PostMapping("/login")
 	VerifyOtpResponse login(@Valid @RequestBody LoginRequest request) {
-		return authService.login(request.mobileNumber(), request.password());
+		return authService.login(request.email(), request.password());
 	}
 }

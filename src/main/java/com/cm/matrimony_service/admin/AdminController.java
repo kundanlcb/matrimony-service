@@ -47,8 +47,8 @@ public class AdminController {
     private final PasswordEncoder passwordEncoder;
 
     public record CreateMasterDataRequest(@NotBlank String type, @NotBlank String name) {}
-    public record CreateUserRequest(@NotBlank String mobileNumber, @NotBlank String password, Boolean verified) {}
-    public record UpdateUserRequest(@NotBlank String mobileNumber, Boolean verified, String password) {}
+    public record CreateUserRequest(@NotBlank @jakarta.validation.constraints.Email String email, @NotBlank String password, Boolean verified) {}
+    public record UpdateUserRequest(@NotBlank @jakarta.validation.constraints.Email String email, Boolean verified, String password) {}
 
     @GetMapping("/master-data/{type}")
     public List<?> getMasterData(@PathVariable String type) {
@@ -94,10 +94,10 @@ public class AdminController {
     @PostMapping("/users")
     @Transactional
     public User createUser(@Valid @RequestBody CreateUserRequest request) {
-        if (userRepository.findByMobileNumber(request.mobileNumber()).isPresent()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "User with this mobile number already exists");
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "User with this email already exists");
         }
-        User user = new User(request.mobileNumber());
+        User user = new User(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setVerified(request.verified() != null ? request.verified() : false);
         user.setRegistrationStep(RegistrationStep.BIODATA);
@@ -110,12 +110,12 @@ public class AdminController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
         
-        if (!user.getMobileNumber().equals(request.mobileNumber()) && 
-            userRepository.findByMobileNumber(request.mobileNumber()).isPresent()) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Mobile number already in use");
+        if (!user.getEmail().equals(request.email()) && 
+            userRepository.findByEmail(request.email()).isPresent()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Email already in use");
         }
 
-        user.setMobileNumber(request.mobileNumber());
+        user.setEmail(request.email());
         if (request.verified() != null) {
             user.setVerified(request.verified());
         }

@@ -22,7 +22,7 @@ public class BiodataMapper {
 		UUID targetUserId = biodata.getUser().getId();
 		boolean unlocked = viewerId != null && subscriptionService.isUnlocked(viewerId, targetUserId);
 
-		String phoneNumber = unlocked ? biodata.getUser().getMobileNumber() : null;
+		String phoneNumber = null; // mobileNumber removed from User
 		String email = unlocked ? biodata.getUser().getEmail() : null;
 		List<com.cm.matrimony_service.biodata.AddressDtos.AddressResponse> mappedAddresses = mapAddresses(biodata.getAddresses(), unlocked);
 

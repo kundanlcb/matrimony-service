@@ -27,9 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import com.cm.matrimony_service.auth.EmailService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,6 +37,9 @@ class MatrimonyApiIntegrationTests {
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@MockitoBean
+	private EmailService emailService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -66,21 +68,21 @@ class MatrimonyApiIntegrationTests {
 	void authFlowCreatesUserBiodataCriteriaAndReturnsToken() throws Exception {
 		mockMvc.perform(post("/api/v1/auth/request-otp")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json(Map.of("mobileNumber", "+919999999999"))))
+				.content(json(Map.of("email", "test99@example.com"))))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("success"))
 			.andExpect(jsonPath("$.expiresInSeconds").value(300));
 
 		mockMvc.perform(post("/api/v1/auth/verify-otp")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json(Map.of("mobileNumber", "+919999999999", "otp", "123456"))))
+				.content(json(Map.of("email", "test99@example.com", "otp", "123456"))))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("success"))
 			.andExpect(jsonPath("$.token").isNotEmpty())
 			.andExpect(jsonPath("$.user.registrationStep").value("biodata"))
 			.andExpect(jsonPath("$.user.preferredLanguage").value("en"));
 
-		User user = userRepository.findByMobileNumber("+919999999999").orElseThrow();
+		User user = userRepository.findByEmail("test99@example.com").orElseThrow();
 		org.assertj.core.api.Assertions.assertThat(biodataRepository.findByUserId(user.getId())).isPresent();
 		org.assertj.core.api.Assertions.assertThat(criteriaRepository.findByUserId(user.getId())).isPresent();
 	}
@@ -93,7 +95,7 @@ class MatrimonyApiIntegrationTests {
 
 	@Test
 	void biodataCanBePatchedAndCompletedOnlyWhenRequiredFieldsExist() throws Exception {
-		String token = login("+919111111111");
+		String token = login("test11@example.com");
 
 		mockMvc.perform(post("/api/v1/biodata/me/complete").header("Authorization", bearer(token)))
 			.andExpect(status().isBadRequest())
@@ -126,12 +128,12 @@ class MatrimonyApiIntegrationTests {
 
 	@Test
 	void matchesRespectCriteriaSortingAndInteractionExclusions() throws Exception {
-		User active = createUserWithProfile("+919222222222", "Active User", Gender.MALE, 30, "Kashyap", "Patna", "Engineer", 900000L);
-		User candidateOne = createUserWithProfile("+919333333333", "Sneha Mishra", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1400000L);
-		createUserWithProfile("+919444444444", "Puja Jha", Gender.FEMALE, 32, "Vatsa", "Delhi", "Engineer", 2200000L);
-		User passed = createUserWithProfile("+919555555555", "Ignored User", Gender.FEMALE, 25, "Vatsa", "Patna", "Doctor", 3000000L);
+		User active = createUserWithProfile("test22@example.com", "Active User", Gender.MALE, 30, "Kashyap", "Patna", "Engineer", 900000L);
+		User candidateOne = createUserWithProfile("test33@example.com", "Sneha Mishra", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1400000L);
+		createUserWithProfile("test44@example.com", "Puja Jha", Gender.FEMALE, 32, "Vatsa", "Delhi", "Engineer", 2200000L);
+		User passed = createUserWithProfile("test55@example.com", "Ignored User", Gender.FEMALE, 25, "Vatsa", "Patna", "Doctor", 3000000L);
 
-		String token = loginExisting(active.getMobileNumber());
+		String token = loginExisting(active.getEmail());
 		mockMvc.perform(post("/api/v1/interactions")
 				.header("Authorization", bearer(token))
 				.contentType(MediaType.APPLICATION_JSON)
@@ -160,10 +162,10 @@ class MatrimonyApiIntegrationTests {
 
 	@Test
 	void mutualInterestConvertsBothSidesToAcceptedMatch() throws Exception {
-		User first = createUserWithProfile("+919666666666", "First", Gender.MALE, 28, "Kashyap", "Patna", "Engineer", 1000000L);
-		User second = createUserWithProfile("+919777777777", "Second", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1100000L);
-		String firstToken = loginExisting(first.getMobileNumber());
-		String secondToken = loginExisting(second.getMobileNumber());
+		User first = createUserWithProfile("test66@example.com", "First", Gender.MALE, 28, "Kashyap", "Patna", "Engineer", 1000000L);
+		User second = createUserWithProfile("test77@example.com", "Second", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1100000L);
+		String firstToken = loginExisting(first.getEmail());
+		String secondToken = loginExisting(second.getEmail());
 
 		mockMvc.perform(post("/api/v1/interactions")
 				.header("Authorization", bearer(firstToken))
@@ -192,10 +194,10 @@ class MatrimonyApiIntegrationTests {
 
 	@Test
 	void decliningInterestRemovesFromReceivedQueueAndExposesSentAndMatches() throws Exception {
-		User first = createUserWithProfile("+919888888888", "Sender", Gender.MALE, 28, "Kashyap", "Patna", "Engineer", 1000000L);
-		User second = createUserWithProfile("+919999999999", "Recipient", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1100000L);
-		String firstToken = loginExisting(first.getMobileNumber());
-		String secondToken = loginExisting(second.getMobileNumber());
+		User first = createUserWithProfile("test88@example.com", "Sender", Gender.MALE, 28, "Kashyap", "Patna", "Engineer", 1000000L);
+		User second = createUserWithProfile("test99b@example.com", "Recipient", Gender.FEMALE, 26, "Vatsa", "Patna", "Doctor", 1100000L);
+		String firstToken = loginExisting(first.getEmail());
+		String secondToken = loginExisting(second.getEmail());
 
 		// 1. First sends interest to second
 		mockMvc.perform(post("/api/v1/interactions")
@@ -269,7 +271,7 @@ class MatrimonyApiIntegrationTests {
 
 	@Test
 	void uploadEndpointReturnsUserScopedUrl() throws Exception {
-		String token = login("+918888888888");
+		String token = login("test888@example.com");
 
 		mockMvc.perform(get("/api/v1/upload/presigned-url")
 				.header("Authorization", bearer(token))
@@ -280,9 +282,9 @@ class MatrimonyApiIntegrationTests {
 			.andExpect(jsonPath("$.fileUrl").value(org.hamcrest.Matchers.containsString("profile_photo.jpg")));
 	}
 
-	private User createUserWithProfile(String mobileNumber, String name, Gender gender, int age, String gotra,
+	private User createUserWithProfile(String email, String name, Gender gender, int age, String gotra,
 		String location, String profession, Long income) {
-		User user = userRepository.save(new User(mobileNumber));
+		User user = userRepository.save(new User(email));
 		user.setVerified(true);
 		user = userRepository.save(user);
 		Biodata biodata = new Biodata(user);
@@ -301,18 +303,18 @@ class MatrimonyApiIntegrationTests {
 		return user;
 	}
 
-	private String login(String mobileNumber) throws Exception {
-		return loginExisting(mobileNumber);
+	private String login(String email) throws Exception {
+		return loginExisting(email);
 	}
 
-	private String loginExisting(String mobileNumber) throws Exception {
+	private String loginExisting(String email) throws Exception {
 		mockMvc.perform(post("/api/v1/auth/request-otp")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json(Map.of("mobileNumber", mobileNumber))))
+				.content(json(Map.of("email", email))))
 			.andExpect(status().isOk());
 		MvcResult result = mockMvc.perform(post("/api/v1/auth/verify-otp")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(json(Map.of("mobileNumber", mobileNumber, "otp", "123456"))))
+				.content(json(Map.of("email", email, "otp", "123456"))))
 			.andExpect(status().isOk())
 			.andReturn();
 		JsonNode node = objectMapper.readTree(result.getResponse().getContentAsString());
