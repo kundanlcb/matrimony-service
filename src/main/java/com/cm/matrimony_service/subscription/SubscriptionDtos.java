@@ -4,6 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Data Transfer Objects (DTOs) used for subscription-related operations.
+ */
 public final class SubscriptionDtos {
 
 	private SubscriptionDtos() {

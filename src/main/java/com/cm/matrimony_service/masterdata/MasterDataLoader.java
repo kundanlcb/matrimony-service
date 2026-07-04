@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Component responsible for loading initial master data into the database
+ * on application startup if the tables are empty.
+ */
 @Component
 @RequiredArgsConstructor
 public class MasterDataLoader implements CommandLineRunner {
@@ -20,6 +24,11 @@ public class MasterDataLoader implements CommandLineRunner {
     private final CasteRepository casteRepository;
     private final ProfessionRepository professionRepository;
 
+    /**
+     * Executes the data seeding logic on application startup.
+     *
+     * @param args command line arguments
+     */
     @Override
     public void run(String... args) {
         seedCities();

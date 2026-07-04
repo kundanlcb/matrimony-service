@@ -8,6 +8,10 @@ import jakarta.persistence.Converter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JPA attribute converter for serializing a List of Strings to a JSON string
+ * in the database and deserializing it back to a List of Strings.
+ */
 @Converter
 public class StringListJsonConverter implements AttributeConverter<List<String>, String> {
 

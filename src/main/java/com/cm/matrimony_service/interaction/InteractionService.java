@@ -15,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service for handling business logic related to user interactions.
+ * This includes sending interests, accepting/declining matches, and fetching interaction history.
+ */
 @Service
 @RequiredArgsConstructor
 public class InteractionService {
@@ -25,6 +29,15 @@ public class InteractionService {
 	private final BiodataMapper biodataMapper;
 	private final BlockRepository blockRepository;
 
+	/**
+	 * Sends an interaction from one user to another.
+	 * Evaluates block status, active profile status, and potential mutual matches.
+	 *
+	 * @param fromUserId the ID of the user sending the interaction
+	 * @param toUserId   the ID of the user receiving the interaction
+	 * @param typeValue  the type of interaction as a string (e.g., "INTEREST_SENT", "MATCH_DECLINED")
+	 * @return a response containing status and mutual match flag
+	 */
 	@Transactional
 	public SendInteractionResponse send(UUID fromUserId, UUID toUserId, String typeValue) {
 		if (fromUserId.equals(toUserId)) {
@@ -66,6 +79,12 @@ public class InteractionService {
 		return new SendInteractionResponse("success", mutual);
 	}
 
+	/**
+	 * Retrieves a list of users who have sent an interest to the specified user.
+	 *
+	 * @param userId the ID of the user receiving the interests
+	 * @return a list of biodata responses for the senders
+	 */
 	@Transactional(readOnly = true)
 	public List<BiodataResponse> received(UUID userId) {
 		return interactionRepository.findByToUserIdAndType(userId, InteractionType.INTEREST_SENT).stream()
@@ -76,6 +95,12 @@ public class InteractionService {
 			.toList();
 	}
 
+	/**
+	 * Retrieves a list of users to whom the specified user has sent an interest.
+	 *
+	 * @param userId the ID of the user sending the interests
+	 * @return a list of biodata responses for the recipients
+	 */
 	@Transactional(readOnly = true)
 	public List<BiodataResponse> sent(UUID userId) {
 		return interactionRepository.findByFromUserIdAndType(userId, InteractionType.INTEREST_SENT).stream()
@@ -86,6 +111,12 @@ public class InteractionService {
 			.toList();
 	}
 
+	/**
+	 * Retrieves a list of users who are mutual matches with the specified user.
+	 *
+	 * @param userId the ID of the user to find matches for
+	 * @return a list of biodata responses for the mutual matches
+	 */
 	@Transactional(readOnly = true)
 	public List<BiodataResponse> matches(UUID userId) {
 		return interactionRepository.findByFromUserIdAndType(userId, InteractionType.MATCH_ACCEPTED).stream()

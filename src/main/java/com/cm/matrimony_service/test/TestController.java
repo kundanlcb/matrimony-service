@@ -16,6 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Controller providing endpoints for testing and automation purposes, such as e2e testing.
+ */
 @RestController
 @RequestMapping("/api/v1/test")
 @RequiredArgsConstructor
@@ -26,6 +29,12 @@ public class TestController {
 	private final MatchCriteriaRepository matchCriteriaRepository;
 	private final InteractionRepository interactionRepository;
 
+	/**
+	 * Tears down the test data generated during e2e testing.
+	 * 
+	 * @param secret the secret key required to execute the teardown
+	 * @return ResponseEntity containing a success message or an error if unauthorized
+	 */
 	@PostMapping("/teardown")
 	@Transactional
 	public ResponseEntity<String> teardown(@RequestHeader(value = "X-Test-Secret", required = false) String secret) {

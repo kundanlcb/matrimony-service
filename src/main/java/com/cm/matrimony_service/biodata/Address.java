@@ -15,6 +15,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents an address entity associated with a user's biodata.
+ */
 @Entity
 @Table(name = "addresses")
 @Getter
@@ -51,6 +54,18 @@ public class Address {
 	@Column(name = "is_primary", nullable = false)
 	private boolean primary = false;
 
+	/**
+	 * Constructs an Address with the specified details.
+	 *
+	 * @param biodata       the biodata this address belongs to
+	 * @param addressType   the type of address
+	 * @param city          the city
+	 * @param state         the state
+	 * @param country       the country
+	 * @param pincode       the postal code
+	 * @param streetAddress the detailed street address
+	 * @param primary       whether this is the primary address
+	 */
 	public Address(Biodata biodata, AddressType addressType, String city, String state, String country, String pincode, String streetAddress, boolean primary) {
 		this.biodata = biodata;
 		this.addressType = addressType;

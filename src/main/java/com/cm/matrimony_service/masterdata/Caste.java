@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a Caste in the master data.
+ */
 @Entity
 @Table(name = "castes")
 @Getter
@@ -23,6 +26,11 @@ public class Caste {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
+    /**
+     * Constructs a new Caste with the given name.
+     *
+     * @param name the name of the caste
+     */
     public Caste(String name) {
         this.name = name;
     }

@@ -19,6 +19,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity class representing an interaction between two users.
+ * An interaction could be sending an interest, shortlisting, passing, or match acceptance/decline.
+ */
+
 @Entity
 @Table(name = "interactions",
 	uniqueConstraints = @UniqueConstraint(name = "unique_interaction", columnNames = {"from_user_id", "to_user_id", "type"}),

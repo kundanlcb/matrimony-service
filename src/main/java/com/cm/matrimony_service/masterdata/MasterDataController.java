@@ -9,6 +9,9 @@ import com.cm.matrimony_service.common.exception.ApiException;
 import org.springframework.http.HttpStatus;
 import java.util.List;
 
+/**
+ * REST controller for retrieving master data such as cities, gotras, religions, etc.
+ */
 @RestController
 @RequestMapping("/api/v1/master-data")
 @RequiredArgsConstructor
@@ -20,6 +23,12 @@ public class MasterDataController {
     private final CasteRepository casteRepository;
     private final ProfessionRepository professionRepository;
 
+    /**
+     * Retrieves the list of master data for the specified type.
+     *
+     * @param type the type of master data to retrieve (e.g., city, gotra)
+     * @return a list of master data entities
+     */
     @GetMapping("/{type}")
     public List<?> getMasterData(@PathVariable String type) {
         return switch (type.toLowerCase()) {

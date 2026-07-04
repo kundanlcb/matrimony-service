@@ -21,7 +21,7 @@
         },
         {
           "name": "SPRING_DATASOURCE_URL",
-          "value": "jdbc:postgresql://maithilmatchdb.cxaamumwyfvn.ap-south-1.rds.amazonaws.com:5432/postgres"
+          "value": "jdbc:postgresql://maithilmatchdb-v2.cxaamumwyfvn.ap-south-1.rds.amazonaws.com:5432/postgres"
         },
         {
           "name": "APP_JWT_SECRET",
@@ -38,6 +38,14 @@
         {
           "name": "SPRING_JPA_HIBERNATE_DDL_AUTO",
           "value": "update"
+        },
+        {
+          "name": "SPRING_MAIL_USERNAME",
+          "value": "maithilmatch@gmail.com"
+        },
+        {
+          "name": "SPRING_MAIL_PASSWORD",
+          "value": "rqzkrzbrocrwaonw"
         }
       ],
       "environmentFiles": [],

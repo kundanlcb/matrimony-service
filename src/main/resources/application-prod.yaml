@@ -2,7 +2,7 @@ spring:
   datasource:
     # This uses your production AWS RDS host as the default.
     # We still allow overriding it via environment variables if needed.
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://maithilmatchdb.cxaamumwyfvn.ap-south-1.rds.amazonaws.com:5432/matrimonydb}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://maithilmatchdb-v2.cxaamumwyfvn.ap-south-1.rds.amazonaws.com:5432/postgres}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD} # Must be provided at deployment time!
 
@@ -11,7 +11,7 @@ spring:
       # In production, we usually use 'validate' or 'none' instead of 'update' 
       # to prevent Hibernate from accidentally dropping/altering production tables.
       # You can manage database migrations securely with Flyway or Liquibase later.
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:validate}
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
     show-sql: false
 
 app:

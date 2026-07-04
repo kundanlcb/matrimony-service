@@ -2,6 +2,9 @@ package com.cm.matrimony_service.auth;
 
 import java.security.MessageDigest;
 
+/**
+ * Utility class providing support for message digest operations.
+ */
 final class MessageDigestSupport {
 
 	private MessageDigestSupport() {

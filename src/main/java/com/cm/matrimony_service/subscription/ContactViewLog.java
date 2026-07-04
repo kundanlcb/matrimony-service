@@ -16,6 +16,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a record of a user viewing another user's contact details.
+ */
 @Entity
 @Table(name = "contact_view_logs",
 	uniqueConstraints = @UniqueConstraint(name = "unique_view", columnNames = {"viewer_id", "viewed_user_id"}))

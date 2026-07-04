@@ -1,0 +1,241 @@
+{
+    "events": [
+        {
+            "timestamp": 1783132787445,
+            "message": "  .   ____          _            __ _ _",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132787445,
+            "message": " /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132787445,
+            "message": "( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132787445,
+            "message": " \\\\/  ___)| |_)| | | | | || (_| |  ) ) ) )",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132787445,
+            "message": "  '  |____| .__|_| |_|_| |_\\__, | / / / /",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132787445,
+            "message": " =========|_|==============|___/=/_/_/_/",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132787447,
+            "message": " :: Spring Boot ::                (v4.0.6)",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132788353,
+            "message": "2026-07-04T02:39:48.344Z  INFO 1 --- [matrimony-service] [           main] c.c.m.MatrimonyServiceApplication        : Starting MatrimonyServiceApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 1 (/app/app.jar started by spring in /app)",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132788355,
+            "message": "2026-07-04T02:39:48.354Z  INFO 1 --- [matrimony-service] [           main] c.c.m.MatrimonyServiceApplication        : The following 1 profile is active: \"prod\"",
+            "ingestionTime": 1783132790480
+        },
+        {
+            "timestamp": 1783132796642,
+            "message": "2026-07-04T02:39:56.642Z  INFO 1 --- [matrimony-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.",
+            "ingestionTime": 1783132800447
+        },
+        {
+            "timestamp": 1783132797053,
+            "message": "2026-07-04T02:39:57.052Z  INFO 1 --- [matrimony-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 394 ms. Found 13 JPA repository interfaces.",
+            "ingestionTime": 1783132800447
+        },
+        {
+            "timestamp": 1783132801158,
+            "message": "2026-07-04T02:40:01.157Z  INFO 1 --- [matrimony-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)",
+            "ingestionTime": 1783132805438
+        },
+        {
+            "timestamp": 1783132801246,
+            "message": "2026-07-04T02:40:01.245Z  INFO 1 --- [matrimony-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]",
+            "ingestionTime": 1783132805438
+        },
+        {
+            "timestamp": 1783132801246,
+            "message": "2026-07-04T02:40:01.246Z  INFO 1 --- [matrimony-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.21]",
+            "ingestionTime": 1783132805438
+        },
+        {
+            "timestamp": 1783132801357,
+            "message": "2026-07-04T02:40:01.356Z  INFO 1 --- [matrimony-service] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 12511 ms",
+            "ingestionTime": 1783132805438
+        },
+        {
+            "timestamp": 1783132803065,
+            "message": "2026-07-04T02:40:03.065Z  INFO 1 --- [matrimony-service] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]",
+            "ingestionTime": 1783132805438
+        },
+        {
+            "timestamp": 1783132803462,
+            "message": "2026-07-04T02:40:03.462Z  INFO 1 --- [matrimony-service] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.2.12.Final",
+            "ingestionTime": 1783132805438
+        },
+        {
+            "timestamp": 1783132807246,
+            "message": "2026-07-04T02:40:07.246Z  INFO 1 --- [matrimony-service] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132807449,
+            "message": "2026-07-04T02:40:07.449Z  INFO 1 --- [matrimony-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132809462,
+            "message": "2026-07-04T02:40:09.462Z  INFO 1 --- [matrimony-service] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6d4d0a14",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132809464,
+            "message": "2026-07-04T02:40:09.464Z  INFO 1 --- [matrimony-service] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "2026-07-04T02:40:10.059Z  INFO 1 --- [matrimony-service] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tDatabase JDBC URL [jdbc:postgresql://maithilmatchdb-v2.cxaamumwyfvn.ap-south-1.rds.amazonaws.com:5432/postgres]",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tDatabase driver: PostgreSQL JDBC Driver",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tDatabase dialect: PostgreSQLDialect",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tDatabase version: 18.3",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tDefault catalog/schema: postgres/public",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tAutocommit mode: undefined/unknown",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tIsolation level: READ_COMMITTED [default READ_COMMITTED]",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tJDBC fetch size: none",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tPool: DataSourceConnectionProvider",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tMinimum pool size: undefined/unknown",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132810060,
+            "message": "\tMaximum pool size: undefined/unknown",
+            "ingestionTime": 1783132810434
+        },
+        {
+            "timestamp": 1783132819138,
+            "message": "2026-07-04T02:40:19.138Z  INFO 1 --- [matrimony-service] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)",
+            "ingestionTime": 1783132820449
+        },
+        {
+            "timestamp": 1783132819479,
+            "message": "2026-07-04T02:40:19.479Z  INFO 1 --- [matrimony-service] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'",
+            "ingestionTime": 1783132820449
+        },
+        {
+            "timestamp": 1783132819947,
+            "message": "2026-07-04T02:40:19.947Z  INFO 1 --- [matrimony-service] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.",
+            "ingestionTime": 1783132820449
+        },
+        {
+            "timestamp": 1783132829760,
+            "message": "2026-07-04T02:40:29.760Z  WARN 1 --- [matrimony-service] [           main] .s.a.UserDetailsServiceAutoConfiguration : ",
+            "ingestionTime": 1783132830442
+        },
+        {
+            "timestamp": 1783132829760,
+            "message": "Using generated security password: d9851e57-0885-487f-936c-23a110d314b2",
+            "ingestionTime": 1783132830442
+        },
+        {
+            "timestamp": 1783132829760,
+            "message": "This generated password is for development use only. Your security configuration must be updated before running your application in production.",
+            "ingestionTime": 1783132830442
+        },
+        {
+            "timestamp": 1783132829843,
+            "message": "2026-07-04T02:40:29.843Z  INFO 1 --- [matrimony-service] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager",
+            "ingestionTime": 1783132830442
+        },
+        {
+            "timestamp": 1783132834546,
+            "message": "2026-07-04T02:40:34.545Z  INFO 1 --- [matrimony-service] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'",
+            "ingestionTime": 1783132835433
+        },
+        {
+            "timestamp": 1783132834641,
+            "message": "2026-07-04T02:40:34.641Z  INFO 1 --- [matrimony-service] [           main] c.c.m.MatrimonyServiceApplication        : Started MatrimonyServiceApplication in 50.084 seconds (process running for 54.103)",
+            "ingestionTime": 1783132835433
+        },
+        {
+            "timestamp": 1783132835263,
+            "message": "2026-07-04T02:40:35.262Z  WARN 1 --- [matrimony-service] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'",
+            "ingestionTime": 1783132835433
+        },
+        {
+            "timestamp": 1783132835337,
+            "message": "2026-07-04T02:40:35.263Z  WARN 1 --- [matrimony-service] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'",
+            "ingestionTime": 1783132835433
+        },
+        {
+            "timestamp": 1783132845455,
+            "message": "2026-07-04T02:40:45.455Z  INFO 1 --- [matrimony-service] [nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'",
+            "ingestionTime": 1783132850451
+        },
+        {
+            "timestamp": 1783132845455,
+            "message": "2026-07-04T02:40:45.455Z  INFO 1 --- [matrimony-service] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'",
+            "ingestionTime": 1783132850451
+        },
+        {
+            "timestamp": 1783132845459,
+            "message": "2026-07-04T02:40:45.459Z  INFO 1 --- [matrimony-service] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms",
+            "ingestionTime": 1783132850451
+        }
+    ],
+    "nextForwardToken": "f/39765191241712041910270654357304144550791367539638730754/s",
+    "nextBackwardToken": "b/39765189947956609962715083351750742263801557976971935744/s"
+}

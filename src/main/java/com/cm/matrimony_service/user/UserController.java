@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for managing user-specific operations such as deactivation,
+ * visibility toggle, deletion request, and blocking other users.
+ */
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -30,6 +34,12 @@ public class UserController {
 	private final BiodataRepository biodataRepository;
 	private final BiodataMapper biodataMapper;
 
+	/**
+	 * Deactivates the authenticated user's account.
+	 *
+	 * @param user the authenticated user
+	 * @return a success message
+	 */
 	@PostMapping("/deactivate")
 	@Transactional
 	public String deactivate(@AuthenticationPrincipal AuthenticatedUser user) {
@@ -40,6 +50,12 @@ public class UserController {
 		return "Account deactivated successfully";
 	}
 
+	/**
+	 * Toggles the hidden status of the authenticated user's profile.
+	 *
+	 * @param user the authenticated user
+	 * @return a success message indicating the new visibility status
+	 */
 	@PostMapping("/toggle-hidden")
 	@Transactional
 	public String toggleHidden(@AuthenticationPrincipal AuthenticatedUser user) {
@@ -50,6 +66,13 @@ public class UserController {
 		return u.isHidden() ? "Profile hidden successfully" : "Profile made visible successfully";
 	}
 
+	/**
+	 * Requests the deletion of the authenticated user's account.
+	 * The profile will be scheduled for deletion and marked as hidden.
+	 *
+	 * @param user the authenticated user
+	 * @return a success message
+	 */
 	@PostMapping("/delete-request")
 	@Transactional
 	public String requestDelete(@AuthenticationPrincipal AuthenticatedUser user) {
@@ -60,6 +83,14 @@ public class UserController {
 		return "Account deletion scheduled. Your profile is now hidden.";
 	}
 
+	/**
+	 * Blocks another user, preventing further interactions and hiding their profile.
+	 * Also removes any existing interactions between the two users.
+	 *
+	 * @param user the authenticated user initiating the block
+	 * @param targetUserId the ID of the user to be blocked
+	 * @return a success or failure message
+	 */
 	@PostMapping("/block/{targetUserId}")
 	@Transactional
 	public String block(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable UUID targetUserId) {
@@ -83,6 +114,13 @@ public class UserController {
 		return "User blocked successfully";
 	}
 
+	/**
+	 * Unblocks a previously blocked user.
+	 *
+	 * @param user the authenticated user initiating the unblock
+	 * @param targetUserId the ID of the user to unblock
+	 * @return a success message
+	 */
 	@PostMapping("/unblock/{targetUserId}")
 	@Transactional
 	public String unblock(@AuthenticationPrincipal AuthenticatedUser user, @PathVariable UUID targetUserId) {
@@ -92,6 +130,12 @@ public class UserController {
 		return "User unblocked successfully";
 	}
 
+	/**
+	 * Retrieves the biodata of all users blocked by the authenticated user.
+	 *
+	 * @param user the authenticated user
+	 * @return a list of biodata responses for the blocked users
+	 */
 	@GetMapping("/blocked")
 	@Transactional(readOnly = true)
 	public List<BiodataResponse> getBlocked(@AuthenticationPrincipal AuthenticatedUser user) {

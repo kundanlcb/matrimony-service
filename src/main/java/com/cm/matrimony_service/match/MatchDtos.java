@@ -5,11 +5,17 @@ import jakarta.validation.constraints.Min;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Data Transfer Objects (DTOs) for Match-related operations.
+ */
 public final class MatchDtos {
 
 	private MatchDtos() {
 	}
 
+	/**
+	 * Response DTO representing a matched profile.
+	 */
 	public record MatchProfileResponse(
 		UUID id,
 		String fullName,
@@ -22,6 +28,9 @@ public final class MatchDtos {
 		String location) {
 	}
 
+	/**
+	 * Request DTO for updating match criteria.
+	 */
 	public record CriteriaRequest(
 		@Min(18) @Max(70) Integer minAge,
 		@Min(18) @Max(70) Integer maxAge,
@@ -33,6 +42,9 @@ public final class MatchDtos {
 		List<String> allowedProfessions) {
 	}
 
+	/**
+	 * Response DTO representing match criteria.
+	 */
 	public record CriteriaResponse(
 		UUID id,
 		Integer minAge,

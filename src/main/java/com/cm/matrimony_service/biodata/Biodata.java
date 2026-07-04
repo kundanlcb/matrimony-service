@@ -2,6 +2,7 @@ package com.cm.matrimony_service.biodata;
 
 import com.cm.matrimony_service.common.persistence.StringListJsonConverter;
 import com.cm.matrimony_service.user.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
@@ -22,6 +24,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents the biodata profile of a user.
+ */
 @Entity
 @Table(name = "biodata")
 @Getter
@@ -93,9 +98,14 @@ public class Biodata {
 	@Column(name = "additional_photos", columnDefinition = "text")
 	private List<String> additionalPhotos = new ArrayList<>();
 
-	@jakarta.persistence.OneToMany(mappedBy = "biodata", cascade = jakarta.persistence.CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "biodata", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addresses = new ArrayList<>();
 
+	/**
+	 * Constructs a Biodata with the given user.
+	 *
+	 * @param user the user this biodata is associated with
+	 */
 	public Biodata(User user) {
 		this.user = user;
 	}

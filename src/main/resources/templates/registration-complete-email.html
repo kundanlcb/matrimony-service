@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Maithil Match - Profile Completed</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #fcf9f9; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+    <div style="padding: 30px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div style="background-color: #FF5A5F; padding: 25px; text-align: center;">
+                <h2 style="color: #ffffff; margin: 0; font-size: 24px; letter-spacing: 1px;">Maithil Match 🌺</h2>
+            </div>
+            <div style="padding: 40px 30px; color: #4a4a4a; line-height: 1.6;">
+                <h2 style="color: #FF5A5F; margin-top: 0; font-size: 22px; text-align: center;">Congratulations, <span th:text="${fullName}">User</span>! 🎉</h2>
+                <p style="font-size: 16px; text-align: center;">Your Maithil Match profile has been successfully created and completed.</p>
+                
+                <div style="background-color: #fff8f8; border-radius: 8px; padding: 25px; margin: 30px 0;">
+                    <h3 style="color: #FF5A5F; margin-top: 0; margin-bottom: 15px; font-size: 18px; border-bottom: 1px solid #ffdede; padding-bottom: 10px;">Your Profile Details</h3>
+                    <table style="width: 100%; font-size: 15px; border-collapse: collapse;">
+                        <tr><td style="padding: 8px 0; color: #777; width: 40%;">Full Name:</td><td style="padding: 8px 0; font-weight: 600;" th:text="${fullName}">Name</td></tr>
+                        <tr><td style="padding: 8px 0; color: #777;">Gender:</td><td style="padding: 8px 0; font-weight: 600;" th:text="${gender}">Gender</td></tr>
+                        <tr><td style="padding: 8px 0; color: #777;">Age:</td><td style="padding: 8px 0; font-weight: 600;" th:text="${age}">Age</td></tr>
+                        <tr><td style="padding: 8px 0; color: #777;">Gotra:</td><td style="padding: 8px 0; font-weight: 600;" th:text="${gotra}">Gotra</td></tr>
+                        <tr><td style="padding: 8px 0; color: #777;">Profession:</td><td style="padding: 8px 0; font-weight: 600;" th:text="${profession}">Profession</td></tr>
+                        <tr><td style="padding: 8px 0; color: #777;">Location:</td><td style="padding: 8px 0; font-weight: 600;" th:text="${location}">Location</td></tr>
+                    </table>
+                </div>
+                
+                <p style="font-size: 16px; text-align: center;">You can now log in to start finding matches!</p>
+            </div>
+            <div style="background-color: #f9f9f9; padding: 20px; text-align: center; border-top: 1px solid #eeeeee;">
+                <p style="margin: 0; font-size: 14px; color: #666;">Best Regards,<br/><strong style="color: #FF5A5F;">The Maithil Match Team</strong></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

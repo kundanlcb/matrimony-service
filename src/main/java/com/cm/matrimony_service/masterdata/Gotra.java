@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a Gotra in the master data.
+ */
 @Entity
 @Table(name = "gotras")
 @Getter
@@ -23,6 +26,11 @@ public class Gotra {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
+    /**
+     * Constructs a new Gotra with the given name.
+     *
+     * @param name the name of the gotra
+     */
     public Gotra(String name) {
         this.name = name;
     }

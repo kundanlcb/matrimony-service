@@ -6,11 +6,17 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Data Transfer Objects (DTOs) for Biodata-related operations.
+ */
 public final class BiodataDtos {
 
 	private BiodataDtos() {
 	}
 
+	/**
+	 * Response DTO representing a user's biodata.
+	 */
 	public record BiodataResponse(
 		UUID id,
 		String fullName,
@@ -31,11 +37,13 @@ public final class BiodataDtos {
 		String complexion,
 		List<String> interests,
 		List<String> additionalPhotos,
-		String phoneNumber,
 		String email,
-		java.util.List<com.cm.matrimony_service.biodata.AddressDtos.AddressResponse> addresses) {
+		List<AddressDtos.AddressResponse> addresses) {
 	}
 
+	/**
+	 * Request DTO for updating a user's biodata.
+	 */
 	public record UpdateBiodataRequest(
 		@Size(max = 100) String fullName,
 		String gender,
@@ -56,12 +64,18 @@ public final class BiodataDtos {
 		List<String> interests,
 		List<String> additionalPhotos,
 		String email,
-		java.util.List<com.cm.matrimony_service.biodata.AddressDtos.AddressRequest> addresses) {
+		List<AddressDtos.AddressRequest> addresses) {
 	}
 
+	/**
+	 * Response DTO for completing registration.
+	 */
 	public record CompleteRegistrationResponse(String status, String message, String registrationStep) {
 	}
 
+	/**
+	 * Response DTO for public biodata view.
+	 */
 	public record PublicBiodataResponse(
 		UUID id,
 		String fullName,
@@ -78,6 +92,9 @@ public final class BiodataDtos {
 		String aboutMe) {
 	}
 
+	/**
+	 * Response DTO for missing fields during registration.
+	 */
 	public record MissingFieldsResponse(String status, List<String> missingFields) {
 	}
 }

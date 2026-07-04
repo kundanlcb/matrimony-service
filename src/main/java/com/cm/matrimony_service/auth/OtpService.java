@@ -10,6 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for managing One-Time Passwords (OTPs) including generation and verification.
+ */
 @Service
 public class OtpService {
 
@@ -23,12 +26,24 @@ public class OtpService {
 		this.clock = clock;
 	}
 
+	/**
+	 * Requests a new OTP for the given email.
+	 * 
+	 * @param email the email address
+	 * @return the expiration time of the OTP in seconds
+	 */
 	public int request(String email) {
 		String code = configuredCode(email);
 		challenges.put(email, new OtpChallenge(code, clock.instant().plusSeconds(properties.otp().expiresInSeconds())));
 		return properties.otp().expiresInSeconds();
 	}
 
+	/**
+	 * Verifies the provided OTP for the given email.
+	 * 
+	 * @param email the email address
+	 * @param otp the OTP code
+	 */
 	public void verify(String email, String otp) {
 		OtpChallenge challenge = challenges.get(email);
 		if (challenge == null || challenge.expiresAt().isBefore(clock.instant()) || !challenge.code().equals(otp)) {
@@ -37,6 +52,12 @@ public class OtpService {
 		challenges.remove(email);
 	}
 
+	/**
+	 * Retrieves the latest generated OTP for a given email without modifying its state.
+	 * 
+	 * @param email the email address
+	 * @return the latest OTP code, or null if none exists
+	 */
 	public String getLatestCode(String email) {
 		OtpChallenge challenge = challenges.get(email);
 		return challenge != null ? challenge.code() : null;

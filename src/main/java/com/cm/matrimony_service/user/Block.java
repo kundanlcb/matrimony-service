@@ -15,6 +15,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a block action from one user to another.
+ */
 @Entity
 @Table(name = "blocks",
 	uniqueConstraints = @UniqueConstraint(name = "unique_block", columnNames = {"from_user_id", "to_user_id"}))

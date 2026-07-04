@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a Profession in the master data.
+ */
 @Entity
 @Table(name = "professions")
 @Getter
@@ -23,6 +26,11 @@ public class Profession {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
+    /**
+     * Constructs a new Profession with the given name.
+     *
+     * @param name the name of the profession
+     */
     public Profession(String name) {
         this.name = name;
     }

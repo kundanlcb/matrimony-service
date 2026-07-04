@@ -8,6 +8,9 @@ import com.cm.matrimony_service.common.exception.ApiException;
 import com.cm.matrimony_service.user.RegistrationStep;
 import com.cm.matrimony_service.user.User;
 import com.cm.matrimony_service.user.UserRepository;
+import com.cm.matrimony_service.auth.EmailService;
+import com.cm.matrimony_service.biodata.BiodataDtos.PublicBiodataResponse;
+import com.cm.matrimony_service.biodata.AddressDtos.AddressRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * Service for managing user biodata.
+ */
 @Service
 @RequiredArgsConstructor
 public class BiodataService {
@@ -25,18 +31,30 @@ public class BiodataService {
 	private final BiodataRepository biodataRepository;
 	private final UserRepository userRepository;
 	private final BiodataMapper mapper;
-	private final com.cm.matrimony_service.auth.EmailService emailService;
+	private final EmailService emailService;
 
+	/**
+	 * Gets the biodata for the specified user, creating it if it doesn't exist.
+	 *
+	 * @param userId the user ID
+	 * @return the biodata response
+	 */
 	@Transactional(readOnly = true)
 	public BiodataResponse getMine(UUID userId) {
 		return mapper.toResponse(getOrCreateByUserId(userId));
 	}
 
+	/**
+	 * Retrieves the public biodata profile for a user.
+	 *
+	 * @param userId the user ID
+	 * @return the public biodata response
+	 */
 	@Transactional(readOnly = true)
-	public com.cm.matrimony_service.biodata.BiodataDtos.PublicBiodataResponse getPublicBiodata(UUID userId) {
+	public PublicBiodataResponse getPublicBiodata(UUID userId) {
 		Biodata biodata = biodataRepository.findByUserId(userId)
 			.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Profile not found"));
-		return new com.cm.matrimony_service.biodata.BiodataDtos.PublicBiodataResponse(
+		return new PublicBiodataResponse(
 			biodata.getId(),
 			biodata.getFullName(),
 			biodata.getGender() != null ? biodata.getGender().name() : null,
@@ -53,6 +71,13 @@ public class BiodataService {
 		);
 	}
 
+	/**
+	 * Updates the biodata for the specified user.
+	 *
+	 * @param userId  the user ID
+	 * @param request the update request
+	 * @return the updated biodata response
+	 */
 	@Transactional
 	public BiodataResponse updateMine(UUID userId, UpdateBiodataRequest request) {
 		Biodata biodata = getOrCreateByUserId(userId);
@@ -60,6 +85,12 @@ public class BiodataService {
 		return mapper.toResponse(biodataRepository.save(biodata));
 	}
 
+	/**
+	 * Completes the registration process for the user's biodata.
+	 *
+	 * @param userId the user ID
+	 * @return a response entity indicating success or validation errors
+	 */
 	@Transactional
 	public ResponseEntity<?> complete(UUID userId) {
 		Biodata biodata = getOrCreateByUserId(userId);
@@ -114,7 +145,7 @@ public class BiodataService {
 		}
 
 		if (request.addresses() != null) {
-			for (com.cm.matrimony_service.biodata.AddressDtos.AddressRequest addrReq : request.addresses()) {
+			for (AddressRequest addrReq : request.addresses()) {
 				if (addrReq.addressType() == null) continue;
 				AddressType type;
 				try {

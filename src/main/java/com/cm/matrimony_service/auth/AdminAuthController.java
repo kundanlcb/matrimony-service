@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for admin authentication endpoints.
+ */
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor
@@ -19,6 +22,12 @@ public class AdminAuthController {
 	private final AppProperties appProperties;
 	private final JwtService jwtService;
 
+	/**
+	 * Authenticates an admin user and returns a JWT token.
+	 * 
+	 * @param request map containing username and password
+	 * @return ResponseEntity containing the token or an error message
+	 */
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody Map<String, String> request) {
 		String username = request.get("username");

@@ -15,6 +15,9 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
+/**
+ * Service for handling file upload operations, such as generating presigned URLs.
+ */
 @Service
 @RequiredArgsConstructor
 public class UploadService {
@@ -25,6 +28,14 @@ public class UploadService {
 	private final Clock clock;
 	private final S3Presigner s3Presigner;
 
+	/**
+	 * Creates a presigned URL for uploading a file to S3.
+	 *
+	 * @param userId the ID of the user uploading the file
+	 * @param fileName the name of the file to upload
+	 * @param contentType the MIME type of the file
+	 * @return a response containing the upload URL and the public file URL
+	 */
 	public PresignedUrlResponse createPresignedUrl(UUID userId, String fileName, String contentType) {
 		if (!StringUtils.hasText(fileName)) {
 			throw new ApiException(HttpStatus.BAD_REQUEST, "fileName is required");
@@ -52,6 +63,12 @@ public class UploadService {
 		return new PresignedUrlResponse(uploadUrl, fileUrl);
 	}
 
+	/**
+	 * Sanitizes the file name by removing invalid characters and extracting the base name.
+	 *
+	 * @param fileName the original file name
+	 * @return the sanitized file name
+	 */
 	private String sanitize(String fileName) {
 		String cleaned = fileName.replace("\\", "/");
 		cleaned = cleaned.substring(cleaned.lastIndexOf('/') + 1);

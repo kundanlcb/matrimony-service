@@ -18,6 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents the matching criteria preferences for a user.
+ */
 @Entity
 @Table(name = "match_criteria")
 @Getter
@@ -59,6 +62,11 @@ public class MatchCriteria {
 	@Column(name = "allowed_professions", columnDefinition = "text")
 	private List<String> allowedProfessions = new ArrayList<>();
 
+	/**
+	 * Constructs a MatchCriteria for the specified user.
+	 *
+	 * @param user the user
+	 */
 	public MatchCriteria(User user) {
 		this.user = user;
 	}

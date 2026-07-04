@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for handling file upload requests.
+ */
 @RestController
 @RequestMapping("/api/v1/upload")
 @RequiredArgsConstructor
@@ -16,6 +19,14 @@ public class UploadController {
 
 	private final UploadService uploadService;
 
+	/**
+	 * Generates a presigned URL for file upload.
+	 *
+	 * @param user the authenticated user making the request
+	 * @param fileName the name of the file to upload
+	 * @param contentType the MIME type of the file
+	 * @return the presigned URL response
+	 */
 	@GetMapping("/presigned-url")
 	PresignedUrlResponse presignedUrl(@AuthenticationPrincipal AuthenticatedUser user,
 		@RequestParam String fileName,

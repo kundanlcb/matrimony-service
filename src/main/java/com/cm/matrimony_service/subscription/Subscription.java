@@ -17,6 +17,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a user's subscription or credit pack.
+ */
 @Entity
 @Table(name = "subscriptions")
 @Getter

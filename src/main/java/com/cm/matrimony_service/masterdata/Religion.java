@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entity representing a Religion in the master data.
+ */
 @Entity
 @Table(name = "religions")
 @Getter
@@ -23,6 +26,11 @@ public class Religion {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
+    /**
+     * Constructs a new Religion with the given name.
+     *
+     * @param name the name of the religion
+     */
     public Religion(String name) {
         this.name = name;
     }

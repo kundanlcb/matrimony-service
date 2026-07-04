@@ -11,6 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+/**
+ * Mapper for converting between Biodata entities and DTOs.
+ */
 @Component
 @RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class BiodataMapper {
@@ -22,9 +25,9 @@ public class BiodataMapper {
 		UUID targetUserId = biodata.getUser().getId();
 		boolean unlocked = viewerId != null && subscriptionService.isUnlocked(viewerId, targetUserId);
 
-		String phoneNumber = null; // mobileNumber removed from User
+
 		String email = unlocked ? biodata.getUser().getEmail() : null;
-		List<com.cm.matrimony_service.biodata.AddressDtos.AddressResponse> mappedAddresses = mapAddresses(biodata.getAddresses(), unlocked);
+		List<AddressDtos.AddressResponse> mappedAddresses = mapAddresses(biodata.getAddresses(), unlocked);
 
 		return new BiodataResponse(
 			biodata.getId(),
@@ -46,7 +49,6 @@ public class BiodataMapper {
 			biodata.getComplexion(),
 			biodata.getInterests() == null ? List.of() : List.copyOf(biodata.getInterests()),
 			biodata.getAdditionalPhotos() == null ? List.of() : List.copyOf(biodata.getAdditionalPhotos()),
-			phoneNumber,
 			email,
 			mappedAddresses);
 	}
@@ -66,12 +68,12 @@ public class BiodataMapper {
 		return null;
 	}
 
-	private List<com.cm.matrimony_service.biodata.AddressDtos.AddressResponse> mapAddresses(List<Address> addresses, boolean unlocked) {
+	private List<AddressDtos.AddressResponse> mapAddresses(List<Address> addresses, boolean unlocked) {
 		if (addresses == null) {
 			return List.of();
 		}
 		return addresses.stream()
-			.map(addr -> new com.cm.matrimony_service.biodata.AddressDtos.AddressResponse(
+			.map(addr -> new AddressDtos.AddressResponse(
 				addr.getId(),
 				addr.getAddressType().name().toLowerCase(),
 				addr.getCity(),

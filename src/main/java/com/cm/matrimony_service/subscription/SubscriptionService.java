@@ -15,6 +15,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Service class for handling business logic related to subscriptions,
+ * credit packs, and unlocking contact details.
+ */
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService {
@@ -24,6 +28,13 @@ public class SubscriptionService {
 	private final UserRepository userRepository;
 	private final InteractionRepository interactionRepository;
 
+	/**
+	 * Processes a subscription or credit pack purchase for a user.
+	 *
+	 * @param userId the ID of the user making the purchase
+	 * @param request the purchase request details
+	 * @return a response containing the purchase status
+	 */
 	@Transactional
 	public SubscriptionDtos.PurchaseResponse purchase(UUID userId, SubscriptionDtos.PurchaseRequest request) {
 		User user = userRepository.findById(userId)
@@ -51,6 +62,13 @@ public class SubscriptionService {
 		return new SubscriptionDtos.PurchaseResponse("success", "Premium plan activated successfully", saved.getId());
 	}
 
+	/**
+	 * Retrieves the active subscription status for a user, checking both monthly plans
+	 * and available credits.
+	 *
+	 * @param userId the ID of the user
+	 * @return the subscription status response
+	 */
 	@Transactional(readOnly = true)
 	public SubscriptionDtos.SubscriptionStatusResponse getStatus(UUID userId) {
 		Instant now = Instant.now();
@@ -69,6 +87,15 @@ public class SubscriptionService {
 		return new SubscriptionDtos.SubscriptionStatusResponse("free", "active", 0, null);
 	}
 
+	/**
+	 * Checks whether a viewer has unlocked the contact details of a target user.
+	 * Returns true if it's the same user, if there's an active monthly plan,
+	 * or if they have previously spent a credit to unlock it.
+	 *
+	 * @param viewerId the ID of the user viewing the profile
+	 * @param targetUserId the ID of the user being viewed
+	 * @return true if unlocked, false otherwise
+	 */
 	@Transactional(readOnly = true)
 	public boolean isUnlocked(UUID viewerId, UUID targetUserId) {
 		if (viewerId.equals(targetUserId)) {
@@ -94,6 +121,15 @@ public class SubscriptionService {
 		return contactViewLogRepository.existsByViewerIdAndViewedUserId(viewerId, targetUserId);
 	}
 
+	/**
+	 * Reveals the contact details of a target user for the viewer.
+	 * Requires mutual interest and either an active monthly subscription or available credits.
+	 * Deducts one credit if a credit pack is used.
+	 *
+	 * @param viewerId the ID of the user viewing the profile
+	 * @param targetUserId the ID of the user whose contact details are being revealed
+	 * @return a response indicating success or failure of the reveal
+	 */
 	@Transactional
 	public SubscriptionDtos.RevealResponse reveal(UUID viewerId, UUID targetUserId) {
 		if (viewerId.equals(targetUserId)) {

@@ -18,6 +18,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for issuing and parsing JSON Web Tokens (JWT).
+ */
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -29,12 +32,20 @@ public class JwtService {
 	private final AppProperties properties;
 	private final Clock clock;
 
-	public String issueToken(UUID userId, String mobileNumber, String role) {
+	/**
+	 * Issues a new JWT token for a given user.
+	 * 
+	 * @param userId the user's ID
+	 * @param email the user's email
+	 * @param role the user's role
+	 * @return the encoded JWT token string
+	 */
+	public String issueToken(UUID userId, String email, String role) {
 		Instant now = clock.instant();
 		Map<String, Object> header = Map.of("alg", "HS256", "typ", "JWT");
 		Map<String, Object> payload = new LinkedHashMap<>();
 		payload.put("sub", userId.toString());
-		payload.put("mobileNumber", mobileNumber);
+		payload.put("email", email);
 		payload.put("role", role != null ? role : "USER");
 		payload.put("iat", now.getEpochSecond());
 		payload.put("exp", now.plusSeconds(properties.jwt().expirationSeconds()).getEpochSecond());
@@ -43,6 +54,12 @@ public class JwtService {
 		return unsigned + "." + sign(unsigned);
 	}
 
+	/**
+	 * Parses and validates a given JWT token.
+	 * 
+	 * @param token the encoded JWT token string
+	 * @return the authenticated user details extracted from the token
+	 */
 	public AuthenticatedUser parse(String token) {
 		String[] parts = token.split("\\.");
 		if (parts.length != 3) {
@@ -59,7 +76,7 @@ public class JwtService {
 		}
 		String role = (String) claims.get("role");
 		if (role == null) role = "USER";
-		return new AuthenticatedUser(UUID.fromString((String) claims.get("sub")), (String) claims.get("mobileNumber"), role);
+		return new AuthenticatedUser(UUID.fromString((String) claims.get("sub")), (String) claims.get("email"), role);
 	}
 
 	private String encodeJson(Map<String, Object> content) {

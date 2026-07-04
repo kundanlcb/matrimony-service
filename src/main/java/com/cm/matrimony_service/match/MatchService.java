@@ -25,6 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+/**
+ * Service for finding matches and managing match criteria.
+ */
 @Service
 @RequiredArgsConstructor
 public class MatchService {
@@ -37,6 +40,15 @@ public class MatchService {
 	private final InteractionRepository interactionRepository;
 	private final BlockRepository blockRepository;
 
+	/**
+	 * Finds paginated matches for a given user based on their criteria.
+	 *
+	 * @param userId the user ID
+	 * @param page   the page number
+	 * @param size   the page size
+	 * @param sortBy the field to sort by
+	 * @return a page of matched profiles
+	 */
 	@Transactional(readOnly = true)
 	public Page<MatchProfileResponse> findMatches(UUID userId, int page, int size, String sortBy) {
 		if (!SORT_OPTIONS.contains(sortBy)) {
@@ -68,6 +80,13 @@ public class MatchService {
 		return new PageImpl<>(matches.subList(start, end), PageRequest.of(page, size), matches.size());
 	}
 
+	/**
+	 * Updates the match criteria for a user.
+	 *
+	 * @param userId  the user ID
+	 * @param request the criteria update request
+	 * @return the updated criteria response
+	 */
 	@Transactional
 	public CriteriaResponse updateCriteria(UUID userId, CriteriaRequest request) {
 		if (request.minAge() != null && request.maxAge() != null && request.minAge() > request.maxAge()) {
@@ -85,6 +104,12 @@ public class MatchService {
 		return toCriteriaResponse(criteriaRepository.save(criteria));
 	}
 
+	/**
+	 * Retrieves the match criteria for a user.
+	 *
+	 * @param userId the user ID
+	 * @return the criteria response
+	 */
 	@Transactional(readOnly = true)
 	public CriteriaResponse getCriteria(UUID userId) {
 		return toCriteriaResponse(getOrCreateCriteria(userId));
