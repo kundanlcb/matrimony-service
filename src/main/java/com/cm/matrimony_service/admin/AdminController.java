@@ -97,8 +97,11 @@ public class AdminController {
 
     public record AdminUserResponse(
         User user,
+        @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"user", "addresses"})
         Biodata biodata,
+        @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"user"})
         MatchCriteria matchCriteria,
+        @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"user"})
         List<Subscription> subscriptions
     ) {}
 
