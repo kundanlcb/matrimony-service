@@ -27,6 +27,7 @@ public class BiodataMapper {
 
 
 		String email = unlocked ? biodata.getUser().getEmail() : null;
+		String phoneNumber = unlocked ? biodata.getPhoneNumber() : null;
 		List<AddressDtos.AddressResponse> mappedAddresses = mapAddresses(biodata.getAddresses(), unlocked);
 
 		return new BiodataResponse(
@@ -50,6 +51,7 @@ public class BiodataMapper {
 			biodata.getInterests() == null ? List.of() : List.copyOf(biodata.getInterests()),
 			biodata.getAdditionalPhotos() == null ? List.of() : List.copyOf(biodata.getAdditionalPhotos()),
 			email,
+			phoneNumber,
 			mappedAddresses);
 	}
 

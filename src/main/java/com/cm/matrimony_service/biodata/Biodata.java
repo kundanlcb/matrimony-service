@@ -98,6 +98,9 @@ public class Biodata {
 	@Column(name = "additional_photos", columnDefinition = "text")
 	private List<String> additionalPhotos = new ArrayList<>();
 
+	@Column(name = "phone_number", length = 20)
+	private String phoneNumber;
+
 	@OneToMany(mappedBy = "biodata", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Address> addresses = new ArrayList<>();
 

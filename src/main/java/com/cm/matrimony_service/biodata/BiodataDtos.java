@@ -38,6 +38,7 @@ public final class BiodataDtos {
 		List<String> interests,
 		List<String> additionalPhotos,
 		String email,
+		String phoneNumber,
 		List<AddressDtos.AddressResponse> addresses) {
 	}
 
@@ -64,6 +65,7 @@ public final class BiodataDtos {
 		List<String> interests,
 		List<String> additionalPhotos,
 		String email,
+		@Size(max = 20) String phoneNumber,
 		List<AddressDtos.AddressRequest> addresses) {
 	}
 

@@ -139,6 +139,8 @@ public class BiodataService {
 		if (request.interests() != null) biodata.setInterests(new ArrayList<>(request.interests()));
 		if (request.additionalPhotos() != null) biodata.setAdditionalPhotos(new ArrayList<>(request.additionalPhotos()));
 		
+		if (request.phoneNumber() != null) biodata.setPhoneNumber(request.phoneNumber());
+
 		if (request.email() != null) {
 			biodata.getUser().setEmail(request.email());
 			userRepository.save(biodata.getUser());
