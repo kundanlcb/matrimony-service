@@ -13,6 +13,12 @@ import com.cm.matrimony_service.masterdata.ProfessionRepository;
 import com.cm.matrimony_service.user.RegistrationStep;
 import com.cm.matrimony_service.user.User;
 import com.cm.matrimony_service.user.UserRepository;
+import com.cm.matrimony_service.biodata.Biodata;
+import com.cm.matrimony_service.biodata.BiodataRepository;
+import com.cm.matrimony_service.match.MatchCriteria;
+import com.cm.matrimony_service.match.MatchCriteriaRepository;
+import com.cm.matrimony_service.subscription.Subscription;
+import com.cm.matrimony_service.subscription.SubscriptionRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -45,6 +51,9 @@ public class AdminController {
     private final ProfessionRepository professionRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final BiodataRepository biodataRepository;
+    private final MatchCriteriaRepository matchCriteriaRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     public record CreateMasterDataRequest(@NotBlank String type, @NotBlank String name) {}
     public record CreateUserRequest(@NotBlank @jakarta.validation.constraints.Email String email, @NotBlank String password, Boolean verified) {}
@@ -86,12 +95,38 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public record AdminUserResponse(
+        User user,
+        Biodata biodata,
+        MatchCriteria matchCriteria,
+        List<Subscription> subscriptions
+    ) {}
+
+    @GetMapping({"/users", "/users/"})
+    public List<AdminUserResponse> getUsers() {
+        List<User> users = userRepository.findAll();
+        List<Biodata> biodatas = biodataRepository.findAll();
+        List<MatchCriteria> matchCriterias = matchCriteriaRepository.findAll();
+        List<Subscription> subscriptions = subscriptionRepository.findAll();
+
+        return users.stream().map(user -> {
+            Biodata userBiodata = biodatas.stream()
+                .filter(b -> b.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElse(null);
+            MatchCriteria userMatchCriteria = matchCriterias.stream()
+                .filter(m -> m.getUser().getId().equals(user.getId()))
+                .findFirst()
+                .orElse(null);
+            List<Subscription> userSubs = subscriptions.stream()
+                .filter(s -> s.getUser().getId().equals(user.getId()))
+                .sorted((s1, s2) -> s2.getCreatedAt().compareTo(s1.getCreatedAt()))
+                .toList();
+            return new AdminUserResponse(user, userBiodata, userMatchCriteria, userSubs);
+        }).toList();
     }
 
-    @PostMapping("/users")
+    @PostMapping({"/users", "/users/"})
     @Transactional
     public User createUser(@Valid @RequestBody CreateUserRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
