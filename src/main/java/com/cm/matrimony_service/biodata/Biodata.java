@@ -56,6 +56,30 @@ public class Biodata {
 	private String gotra;
 
 	@Column(length = 50)
+	private String mool;
+
+	@Column(name = "date_of_birth", length = 30)
+	private String dateOfBirth;
+
+	@Column(name = "birth_time", length = 30)
+	private String birthTime;
+
+	@Column(name = "birth_place", length = 100)
+	private String birthPlace;
+
+	@Column(name = "father_name", length = 100)
+	private String fatherName;
+
+	@Column(name = "mother_name", length = 100)
+	private String motherName;
+
+	@Column(name = "siblings_detail", columnDefinition = "text")
+	private String siblingsDetail;
+
+	@Column(name = "grandparent_name", length = 100)
+	private String grandparentName;
+
+	@Column(length = 50)
 	private String religion;
 
 	@Column(length = 100)

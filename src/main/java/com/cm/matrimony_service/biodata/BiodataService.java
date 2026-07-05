@@ -62,6 +62,7 @@ public class BiodataService {
 			biodata.getHeight(),
 			biodata.getLocation(),
 			biodata.getGotra(),
+			biodata.getMool(),
 			biodata.getReligion(),
 			biodata.getCaste(),
 			biodata.getPhotoUrl(),
@@ -124,6 +125,14 @@ public class BiodataService {
 		if (request.gender() != null) biodata.setGender(parseGender(request.gender()));
 		if (request.age() != null) biodata.setAge(request.age());
 		if (request.gotra() != null) biodata.setGotra(request.gotra());
+		if (request.mool() != null) biodata.setMool(request.mool());
+		if (request.dateOfBirth() != null) biodata.setDateOfBirth(request.dateOfBirth());
+		if (request.birthTime() != null) biodata.setBirthTime(request.birthTime());
+		if (request.birthPlace() != null) biodata.setBirthPlace(request.birthPlace());
+		if (request.fatherName() != null) biodata.setFatherName(request.fatherName());
+		if (request.motherName() != null) biodata.setMotherName(request.motherName());
+		if (request.siblingsDetail() != null) biodata.setSiblingsDetail(request.siblingsDetail());
+		if (request.grandparentName() != null) biodata.setGrandparentName(request.grandparentName());
 		if (request.religion() != null) biodata.setReligion(request.religion());
 		if (request.caste() != null) biodata.setCaste(request.caste());
 		if (request.profession() != null) biodata.setProfession(request.profession());

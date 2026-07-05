@@ -13,6 +13,7 @@ import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Entity representing a user in the system.
@@ -32,6 +33,7 @@ public class User {
 	@Column(name = "is_verified", nullable = false)
 	private boolean verified;
 
+	@JsonIgnore
 	@Column(name = "password")
 	private String password;
 
