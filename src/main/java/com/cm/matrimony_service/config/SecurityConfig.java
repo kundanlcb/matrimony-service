@@ -46,6 +46,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
 				.requestMatchers(HttpMethod.GET, "/api/v1/biodata/public/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/v1/master-data/**").permitAll()
 				.requestMatchers("/api/v1/test/**").permitAll()
 				.requestMatchers("/api/v1/admin/login").permitAll()
 				.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
