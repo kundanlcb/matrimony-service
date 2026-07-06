@@ -207,7 +207,7 @@ public class BiodataService {
 		List<String> missing = new ArrayList<>();
 		if (!StringUtils.hasText(biodata.getFullName())) missing.add("fullName");
 		if (biodata.getGender() == null) missing.add("gender");
-		if (biodata.getAge() == null) missing.add("age");
+		if (!StringUtils.hasText(biodata.getDateOfBirth())) missing.add("dateOfBirth");
 		if (!StringUtils.hasText(biodata.getGotra())) missing.add("gotra");
 		if (!StringUtils.hasText(biodata.getProfession())) missing.add("profession");
 		if (biodata.getAnnualIncome() == null) missing.add("annualIncome");
