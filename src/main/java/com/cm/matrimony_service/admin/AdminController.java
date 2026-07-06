@@ -57,7 +57,34 @@ public class AdminController {
 
     public record CreateMasterDataRequest(@NotBlank String type, @NotBlank String name) {}
     public record CreateUserRequest(@NotBlank @jakarta.validation.constraints.Email String email, @NotBlank String password, Boolean verified) {}
-    public record UpdateUserRequest(@NotBlank @jakarta.validation.constraints.Email String email, Boolean verified, String password) {}
+    public record UpdateUserRequest(
+        @NotBlank @jakarta.validation.constraints.Email String email, 
+        Boolean verified, 
+        String password,
+        String fullName,
+        String gender,
+        Integer age,
+        String gotra,
+        String mool,
+        String dateOfBirth,
+        String birthTime,
+        String birthPlace,
+        String religion,
+        String caste,
+        String profession,
+        Long annualIncome,
+        String education,
+        String location,
+        String height,
+        String maritalStatus,
+        String diet,
+        String complexion,
+        String fatherName,
+        String motherName,
+        String siblingsDetail,
+        String aboutMe,
+        String phoneNumber
+    ) {}
 
     @GetMapping("/master-data/{type}")
     public List<?> getMasterData(@PathVariable String type) {
@@ -160,6 +187,42 @@ public class AdminController {
         if (request.password() != null && !request.password().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.password()));
         }
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        biodataRepository.findByUserId(user.getId()).ifPresent(biodata -> {
+            if (request.fullName() != null) biodata.setFullName(request.fullName());
+            if (request.gender() != null && !request.gender().isBlank()) {
+                try {
+                    biodata.setGender(com.cm.matrimony_service.biodata.Gender.valueOf(request.gender()));
+                } catch (IllegalArgumentException e) {
+                    // ignore invalid
+                }
+            }
+            if (request.age() != null) biodata.setAge(request.age());
+            if (request.gotra() != null) biodata.setGotra(request.gotra());
+            if (request.mool() != null) biodata.setMool(request.mool());
+            if (request.dateOfBirth() != null) biodata.setDateOfBirth(request.dateOfBirth());
+            if (request.birthTime() != null) biodata.setBirthTime(request.birthTime());
+            if (request.birthPlace() != null) biodata.setBirthPlace(request.birthPlace());
+            if (request.religion() != null) biodata.setReligion(request.religion());
+            if (request.caste() != null) biodata.setCaste(request.caste());
+            if (request.profession() != null) biodata.setProfession(request.profession());
+            if (request.annualIncome() != null) biodata.setAnnualIncome(request.annualIncome());
+            if (request.education() != null) biodata.setEducation(request.education());
+            if (request.location() != null) biodata.setLocation(request.location());
+            if (request.height() != null) biodata.setHeight(request.height());
+            if (request.maritalStatus() != null) biodata.setMaritalStatus(request.maritalStatus());
+            if (request.diet() != null) biodata.setDiet(request.diet());
+            if (request.complexion() != null) biodata.setComplexion(request.complexion());
+            if (request.fatherName() != null) biodata.setFatherName(request.fatherName());
+            if (request.motherName() != null) biodata.setMotherName(request.motherName());
+            if (request.siblingsDetail() != null) biodata.setSiblingsDetail(request.siblingsDetail());
+            if (request.aboutMe() != null) biodata.setAboutMe(request.aboutMe());
+            if (request.phoneNumber() != null) biodata.setPhoneNumber(request.phoneNumber());
+            
+            biodataRepository.save(biodata);
+        });
+
+        return user;
     }
 }
