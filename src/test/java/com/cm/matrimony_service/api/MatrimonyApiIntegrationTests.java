@@ -122,7 +122,7 @@ class MatrimonyApiIntegrationTests {
 				.content(json(Map.of(
 					"fullName", "Rahul Jha",
 					"gender", "Male",
-					"age", 29,
+					"dateOfBirth", "1997-01-01",
 					"gotra", "Kashyap",
 					"profession", "Software Engineer",
 					"annualIncome", 1800000,
