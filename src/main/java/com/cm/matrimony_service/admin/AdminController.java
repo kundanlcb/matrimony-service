@@ -19,6 +19,7 @@ import com.cm.matrimony_service.match.MatchCriteria;
 import com.cm.matrimony_service.match.MatchCriteriaRepository;
 import com.cm.matrimony_service.subscription.Subscription;
 import com.cm.matrimony_service.subscription.SubscriptionRepository;
+import com.cm.matrimony_service.interaction.InteractionRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -54,6 +55,7 @@ public class AdminController {
     private final BiodataRepository biodataRepository;
     private final MatchCriteriaRepository matchCriteriaRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final InteractionRepository interactionRepository;
 
     public record CreateMasterDataRequest(@NotBlank String type, @NotBlank String name) {}
     public record CreateUserRequest(@NotBlank @jakarta.validation.constraints.Email String email, @NotBlank String password, Boolean verified) {}
@@ -224,5 +226,19 @@ public class AdminController {
         });
 
         return user;
+    }
+
+    @DeleteMapping("/users/{id}")
+    @Transactional
+    public void deleteUser(@PathVariable UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
+
+        interactionRepository.deleteAllByUserId(id);
+        subscriptionRepository.findByUserIdOrderByCreatedAtDesc(id).forEach(subscriptionRepository::delete);
+        matchCriteriaRepository.findByUserId(id).ifPresent(matchCriteriaRepository::delete);
+        biodataRepository.findByUserId(id).ifPresent(biodataRepository::delete);
+
+        userRepository.delete(user);
     }
 }
